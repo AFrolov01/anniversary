@@ -7,13 +7,22 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:100vh;width:100vw;overflow:hidden;position:relative}
+#preloader{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f13;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;transition:opacity 1.2s ease,visibility 1.2s ease}
+#preloader.done{opacity:0;visibility:hidden;pointer-events:none}
+.pre-text{font-family:serif;font-size:1.4rem;color:#d4a5a5;margin-bottom:30px;letter-spacing:1px}
+.pre-bar{width:260px;height:2px;background:rgba(212,165,165,.15);border-radius:2px;overflow:hidden}
+.pre-fill{height:100%;width:0%;background:linear-gradient(90deg,#d4a5a5,#e8c4c4);border-radius:2px;transition:width .3s ease}
+.pre-pct{margin-top:15px;font-size:.75rem;color:rgba(255,255,255,.3);letter-spacing:2px}
 .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
-.particle{position:absolute;top:-20px;background:rgba(255,255,255,.15);border-radius:1px;animation:fall linear infinite}
-@keyframes fall{to{transform:translateY(110vh)}}
-#clock{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;padding:20px}
-h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:30px;text-align:center;font-weight:400;opacity:0;transform:translateY(30px);animation:fu 1.2s ease forwards}
+.particle{position:absolute;top:-60px;animation:fall linear infinite}
+.particle.line{background:rgba(255,255,255,.15);border-radius:1px}
+.particle.photo img{width:100%;height:100%;object-fit:cover;border-radius:4px;opacity:.7;filter:drop-shadow(0 0 4px rgba(212,165,165,.3))}
+@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+#clock{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;padding:20px;opacity:0;transition:opacity 1.5s ease}
+#clock.show{opacity:1}
+h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:30px;text-align:center;font-weight:400}
 h1 em{font-style:italic;color:#d4a5a5}
-.wrap{position:relative;width:min(90vw,450px);height:min(90vw,450px);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.8);animation:si 1s ease forwards .6s}
+.wrap{position:relative;width:min(90vw,450px);height:min(90vw,450px);display:flex;align-items:center;justify-content:center}
 .wrap img.clock-face{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 20px rgba(0,0,0,.5))}
 .year-img{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);z-index:5;width:70px;height:auto;pointer-events:none;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.4,0,.2,1)}
 .year-2026{opacity:1}
@@ -28,14 +37,17 @@ h1 em{font-style:italic;color:#d4a5a5}
 @keyframes sh{0%{transform:rotate(232deg)}100%{transform:rotate(-128deg)}}
 @keyframes sm{0%{transform:rotate(278deg)}100%{transform:rotate(-82deg)}}
 @keyframes ss{0%{transform:rotate(195deg);opacity:.85}20%{opacity:1}100%{transform:rotate(-165deg);opacity:.7}}
-.cap{margin-top:40px;color:rgba(212,165,165,.6);font-family:serif;letter-spacing:2px;text-align:center;opacity:0;animation:fu 1s ease forwards 3.5s}
-a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;opacity:0;animation:fu 1s ease forwards 4s}
-@keyframes fu{to{opacity:1;transform:translateY(0)}}
-@keyframes si{to{opacity:1;transform:scale(1)}}
+.cap{margin-top:40px;color:rgba(212,165,165,.6);font-family:serif;letter-spacing:2px;text-align:center}
+a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase}
 @media(max-width:480px){.wrap{width:min(95vw,380px);height:min(95vw,380px)}h1{margin-bottom:20px;font-size:1.4rem}.year-img{width:60px;top:40%}}
 </style>
 </head>
 <body>
+<div id="preloader">
+<div class="pre-text" id="pre-text">Загрузка воспоминаний...</div>
+<div class="pre-bar"><div class="pre-fill" id="pre-fill"></div></div>
+<div class="pre-pct" id="pre-pct">0%</div>
+</div>
 <div class="particles" id="particles"></div>
 <div id="clock">
 <h1>Вспомним, <em>как всё начиналось</em></h1>
@@ -50,22 +62,34 @@ a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color
 <a href="timeline.html">Продолжить</a>
 </div>
 <script>
+const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg'];
+const extra=['clock.png','year2025.png','year2026.png'];
+const all=[...photos,...extra];
+let loaded=0,total=all.length;
+const preFill=document.getElementById('pre-fill'),prePct=document.getElementById('pre-pct'),preloader=document.getElementById('preloader'),clock=document.getElementById('clock');
+function updateProgress(){loaded++;const pct=Math.floor((loaded/total)*100);preFill.style.width=pct+'%';prePct.textContent=pct+'%';if(loaded>=total){setTimeout(()=>{preloader.classList.add('done');clock.classList.add('show');startParticles();startClock();},600);}}
+all.forEach(src=>{const img=new Image();img.onload=updateProgress;img.onerror=updateProgress;img.src=src;});
+function startParticles(){
 const container=document.getElementById('particles');
 for(let i=0;i<60;i++){
+  const isPhoto=Math.random()<.15&&photos.length>0;
   const p=document.createElement('div');
-  p.className='particle';
+  p.className='particle'+(isPhoto?' photo':' line');
   p.style.left=Math.random()*100+'%';
-  p.style.width=(Math.random()*2+1)+'px';
-  p.style.height=(Math.random()*12+4)+'px';
-  p.style.opacity=Math.random()*.3+.05;
+  p.style.width=(isPhoto?40:Math.random()*2+1)+'px';
+  p.style.height=(isPhoto?40:Math.random()*12+4)+'px';
+  p.style.opacity=isPhoto?.6:(Math.random()*.3+.05);
   p.style.animationDuration=(Math.random()*8+4)+'s';
   p.style.animationDelay=(Math.random()*10)+'s';
+  if(isPhoto){const img=document.createElement('img');img.src=photos[Math.floor(Math.random()*photos.length)];p.appendChild(img);}
   container.appendChild(p);
+}}
+function startClock(){
+  setTimeout(()=>{
+    document.getElementById('y2026').classList.add('out');
+    document.getElementById('y2025').classList.add('in');
+  },2500);
 }
-setTimeout(()=>{
-  document.getElementById('y2026').classList.add('out');
-  document.getElementById('y2025').classList.add('in');
-},2500);
 </script>
 </body>
 </html>
