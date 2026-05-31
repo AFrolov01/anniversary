@@ -14,10 +14,12 @@ html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:
 .pre-fill{height:100%;width:0%;background:linear-gradient(90deg,#d4a5a5,#e8c4c4);border-radius:2px;transition:width .3s ease}
 .pre-pct{margin-top:15px;font-size:.75rem;color:rgba(255,255,255,.3);letter-spacing:2px}
 .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
-.particle{position:absolute;top:-60px;animation:fall linear infinite}
-.particle.line{background:rgba(255,255,255,.15);border-radius:1px}
+.particle{position:absolute;top:-60px}
+.particle.line{background:rgba(255,255,255,.15);border-radius:1px;animation:fall linear infinite}
+.particle.photo{animation:fall-rotate linear infinite}
 .particle.photo img{width:100%;height:100%;object-fit:cover;border-radius:4px;opacity:.7;filter:drop-shadow(0 0 4px rgba(212,165,165,.3))}
-@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@keyframes fall{to{transform:translateY(110vh)}}
+@keyframes fall-rotate{to{transform:translateY(110vh) rotate(360deg)}}
 #cover{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;text-align:center;padding:20px;opacity:0;transition:opacity 1.5s ease}
 #cover.show{opacity:1}
 .badge{border:1px solid rgba(212,165,165,.3);padding:8px 24px;border-radius:30px;font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:#d4a5a5;margin-bottom:40px}
@@ -45,7 +47,7 @@ a:hover{border-color:#d4a5a5;box-shadow:0 0 30px rgba(212,165,165,.15);transform
 <a href="clock.html">Открыть воспоминания</a>
 </div>
 <script>
-const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg'];
+const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg','photo6.jpg','photo7.jpg','photo8.jpg','photo9.jpg','photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg','photo15.jpg','photo16.jpg','photo17.jpg'];
 let loaded=0,total=photos.length;
 const preFill=document.getElementById('pre-fill'),prePct=document.getElementById('pre-pct'),preloader=document.getElementById('preloader'),cover=document.getElementById('cover');
 function updateProgress(){loaded++;const pct=Math.floor((loaded/total)*100);preFill.style.width=pct+'%';prePct.textContent=pct+'%';if(loaded>=total){setTimeout(()=>{preloader.classList.add('done');cover.classList.add('show');startParticles();},600);}}
@@ -54,7 +56,7 @@ if(total===0){preloader.classList.add('done');cover.classList.add('show');startP
 function startParticles(){
 const container=document.getElementById('particles');
 for(let i=0;i<60;i++){
-  const isPhoto=Math.random()<.15&&photos.length>0;
+  const isPhoto=Math.random()<.08&&photos.length>0;
   const p=document.createElement('div');
   p.className='particle'+(isPhoto?' photo':' line');
   p.style.left=Math.random()*100+'%';
