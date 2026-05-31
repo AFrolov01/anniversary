@@ -15,10 +15,10 @@ h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bot
 h1 em{font-style:italic;color:#d4a5a5}
 .wrap{position:relative;width:min(90vw,450px);height:min(90vw,450px);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.8);animation:si 1s ease forwards .6s}
 .wrap img.clock-face{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 20px rgba(0,0,0,.5))}
-.year-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;width:45%;height:auto;pointer-events:none;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.4,0,.2,1)}
+.year-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;width:70px;height:auto;pointer-events:none;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.4,0,.2,1)}
 .year-2026{opacity:1}
-.year-2025{opacity:0;transform:translate(-50%,-50%) translateX(-30px)}
-.year-2026.out{opacity:0;transform:translate(-50%,-50%) translateX(30px)}
+.year-2025{opacity:0;transform:translate(-50%,-50%) translateX(-20px)}
+.year-2026.out{opacity:0;transform:translate(-50%,-50%) translateX(20px)}
 .year-2025.in{opacity:1;transform:translate(-50%,-50%) translateX(0)}
 .hand{position:absolute;bottom:50%;left:50%;transform-origin:bottom center;border-radius:4px;z-index:6;box-shadow:2px 2px 5px rgba(0,0,0,.3);pointer-events:none}
 .hh{width:5px;height:26%;background:#1a1510;margin-left:-2.5px;transform:rotate(232deg);border-radius:3px 3px 0 0;animation:sh 5.5s cubic-bezier(.4,0,.2,1) forwards}
@@ -32,7 +32,7 @@ h1 em{font-style:italic;color:#d4a5a5}
 a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;opacity:0;animation:fu 1s ease forwards 4s}
 @keyframes fu{to{opacity:1;transform:translateY(0)}}
 @keyframes si{to{opacity:1;transform:scale(1)}}
-@media(max-width:480px){.wrap{width:min(95vw,380px);height:min(95vw,380px)}h1{margin-bottom:20px;font-size:1.4rem}}
+@media(max-width:480px){.wrap{width:min(95vw,380px);height:min(95vw,380px)}h1{margin-bottom:20px;font-size:1.4rem}.year-img{width:60px}}
 </style>
 </head>
 <body>
