@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Вспомним</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0a0a0f;color:#fff;font-family:system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
+h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:40px;text-align:center;font-weight:400}
+h1 em{font-style:italic;color:#d4a5a5}
+.clock{position:relative;width:min(85vw,400px);height:min(85vw,400px);background:url('clock.png') center/contain no-repeat}
+.hand{position:absolute;bottom:50%;left:50%;transform-origin:bottom center;border-radius:4px;box-shadow:2px 2px 5px rgba(0,0,0,.3)}
+.hour{width:5px;height:26%;background:#1a1510;margin-left:-2.5px;animation:spin 4s ease forwards}
+.minute{width:3px;height:35%;background:#1a1510;margin-left:-1.5px;animation:spin 4s ease forwards}
+.second{width:1.5px;height:38%;background:#3a2010;margin-left:-.75px;opacity:.85;animation:spin 4s ease forwards}
+.dot{position:absolute;width:12px;height:12px;background:#1a1510;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:10}
+.year{position:absolute;top:56%;left:50%;transform:translate(-50%,-50%);font-family:serif;font-size:1.5rem;font-weight:600;color:#4a3520;letter-spacing:2px;z-index:5;background:#c9b896;padding:2px 8px;border-radius:3px}
+@keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(-720deg)}}
+.cap{margin-top:40px;color:rgba(212,165,165,.6);font-family:serif;letter-spacing:2px}
+a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase}
+</style>
+</head>
+<body>
+<h1>Вспомним, <em>как всё начиналось</em></h1>
+<div class="clock">
+  <div class="hand hour"></div>
+  <div class="hand minute"></div>
+  <div class="hand second"></div>
+  <div class="dot"></div>
+  <div class="year">2025</div>
+</div>
+<p class="cap">Год назад всё было иначе...</p>
+<a href="timeline.html">Продолжить</a>
+</body>
+</html>
