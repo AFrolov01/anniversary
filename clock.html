@@ -6,34 +6,66 @@
 <title>Вспомним</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:#0a0a0f;color:#fff;font-family:system-ui,sans-serif;height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:20px}
-h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:30px;text-align:center;font-weight:400}
+html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:100vh;width:100vw;overflow:hidden;position:relative}
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;top:-20px;background:rgba(255,255,255,.15);border-radius:1px;animation:fall linear infinite}
+@keyframes fall{to{transform:translateY(110vh)}}
+#clock{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;padding:20px}
+h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:30px;text-align:center;font-weight:400;opacity:0;transform:translateY(30px);animation:fu 1.2s ease forwards}
 h1 em{font-style:italic;color:#d4a5a5}
-.wrap{position:relative;width:min(90vw,450px);height:min(90vw,450px);display:flex;align-items:center;justify-content:center}
-.wrap img{width:100%;height:100%;object-fit:contain;display:block}
-.y{position:absolute;top:56%;left:50%;transform:translate(-50%,-50%);font-family:serif;font-size:clamp(1.3rem,3.5vw,1.8rem);font-weight:600;color:#4a3520;letter-spacing:2px;z-index:5;background:#c9b896;padding:2px 10px;border-radius:3px}
+.wrap{position:relative;width:min(90vw,450px);height:min(90vw,450px);display:flex;align-items:center;justify-content:center;opacity:0;transform:scale(.8);animation:si 1s ease forwards .6s}
+.wrap img.clock-face{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 20px rgba(0,0,0,.5))}
+.year-img{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);z-index:5;width:45%;height:auto;pointer-events:none;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.4,0,.2,1)}
+.year-2026{opacity:1}
+.year-2025{opacity:0;transform:translate(-50%,-50%) translateX(-30px)}
+.year-2026.out{opacity:0;transform:translate(-50%,-50%) translateX(30px)}
+.year-2025.in{opacity:1;transform:translate(-50%,-50%) translateX(0)}
 .hand{position:absolute;bottom:50%;left:50%;transform-origin:bottom center;border-radius:4px;z-index:6;box-shadow:2px 2px 5px rgba(0,0,0,.3);pointer-events:none}
-.hh{width:5px;height:26%;background:#1a1510;margin-left:-2.5px;transform:rotate(232deg);border-radius:3px 3px 0 0;animation:sh 3.5s cubic-bezier(.4,0,.2,1) forwards}
-.hm{width:3px;height:35%;background:#1a1510;margin-left:-1.5px;transform:rotate(278deg);border-radius:2px 2px 0 0;animation:sm 3.5s cubic-bezier(.4,0,.2,1) forwards}
-.hs{width:1.5px;height:38%;background:#3a2010;margin-left:-.75px;transform:rotate(195deg);opacity:.85;animation:ss 3.5s cubic-bezier(.4,0,.2,1) forwards}
+.hh{width:5px;height:26%;background:#1a1510;margin-left:-2.5px;transform:rotate(232deg);border-radius:3px 3px 0 0;animation:sh 5.5s cubic-bezier(.4,0,.2,1) forwards}
+.hm{width:3px;height:35%;background:#1a1510;margin-left:-1.5px;transform:rotate(278deg);border-radius:2px 2px 0 0;animation:sm 4s cubic-bezier(.4,0,.2,1) forwards}
+.hs{width:1.5px;height:38%;background:#3a2010;margin-left:-.75px;transform:rotate(195deg);opacity:.85;animation:ss 2.5s cubic-bezier(.4,0,.2,1) forwards}
 .dot{position:absolute;width:12px;height:12px;background:#1a1510;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:7;box-shadow:0 2px 5px rgba(0,0,0,.35)}
 @keyframes sh{0%{transform:rotate(232deg)}100%{transform:rotate(-128deg)}}
 @keyframes sm{0%{transform:rotate(278deg)}100%{transform:rotate(-82deg)}}
 @keyframes ss{0%{transform:rotate(195deg);opacity:.85}20%{opacity:1}100%{transform:rotate(-165deg);opacity:.7}}
-.cap{margin-top:30px;color:rgba(212,165,165,.6);font-family:serif;letter-spacing:2px;text-align:center}
-a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase}
-@media(max-width:480px){.wrap{width:min(95vw,380px);height:min(95vw,380px)}}
+.cap{margin-top:40px;color:rgba(212,165,165,.6);font-family:serif;letter-spacing:2px;text-align:center;opacity:0;animation:fu 1s ease forwards 3.5s}
+a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;opacity:0;animation:fu 1s ease forwards 4s}
+@keyframes fu{to{opacity:1;transform:translateY(0)}}
+@keyframes si{to{opacity:1;transform:scale(1)}}
+@media(max-width:480px){.wrap{width:min(95vw,380px);height:min(95vw,380px)}h1{margin-bottom:20px;font-size:1.4rem}}
 </style>
 </head>
 <body>
+<div class="particles" id="particles"></div>
+<div id="clock">
 <h1>Вспомним, <em>как всё начиналось</em></h1>
 <div class="wrap">
-<img src="clock.png" alt="">
-<div class="y">2025</div>
+<img src="clock.png" alt="" class="clock-face">
+<img src="year2026.png" alt="" class="year-img year-2026" id="y2026">
+<img src="year2025.png" alt="" class="year-img year-2025" id="y2025">
 <div class="hand hh"></div><div class="hand hm"></div><div class="hand hs"></div>
 <div class="dot"></div>
 </div>
 <p class="cap">Год назад всё было иначе...</p>
 <a href="timeline.html">Продолжить</a>
+</div>
+<script>
+const container=document.getElementById('particles');
+for(let i=0;i<60;i++){
+  const p=document.createElement('div');
+  p.className='particle';
+  p.style.left=Math.random()*100+'%';
+  p.style.width=(Math.random()*2+1)+'px';
+  p.style.height=(Math.random()*12+4)+'px';
+  p.style.opacity=Math.random()*.3+.05;
+  p.style.animationDuration=(Math.random()*8+4)+'s';
+  p.style.animationDelay=(Math.random()*10)+'s';
+  container.appendChild(p);
+}
+setTimeout(()=>{
+  document.getElementById('y2026').classList.add('out');
+  document.getElementById('y2025').classList.add('in');
+},3800);
+</script>
 </body>
 </html>
