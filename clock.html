@@ -7,17 +7,13 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:100vh;width:100vw;overflow:hidden;position:relative}
-#preloader{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f13;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;transition:opacity 1.2s ease,visibility 1.2s ease}
-#preloader.done{opacity:0;visibility:hidden;pointer-events:none}
-.pre-text{font-family:serif;font-size:1.4rem;color:#d4a5a5;margin-bottom:30px;letter-spacing:1px}
-.pre-bar{width:260px;height:2px;background:rgba(212,165,165,.15);border-radius:2px;overflow:hidden}
-.pre-fill{height:100%;width:0%;background:linear-gradient(90deg,#d4a5a5,#e8c4c4);border-radius:2px;transition:width .3s ease}
-.pre-pct{margin-top:15px;font-size:.75rem;color:rgba(255,255,255,.3);letter-spacing:2px}
 .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
-.particle{position:absolute;top:-60px;animation:fall linear infinite}
-.particle.line{background:rgba(255,255,255,.15);border-radius:1px}
+.particle{position:absolute;top:-60px}
+.particle.line{background:rgba(255,255,255,.15);border-radius:1px;animation:fall linear infinite}
+.particle.photo{animation:fall-rotate linear infinite}
 .particle.photo img{width:100%;height:100%;object-fit:cover;border-radius:4px;opacity:.7;filter:drop-shadow(0 0 4px rgba(212,165,165,.3))}
-@keyframes fall{to{transform:translateY(110vh) rotate(360deg)}}
+@keyframes fall{to{transform:translateY(110vh)}}
+@keyframes fall-rotate{to{transform:translateY(110vh) rotate(360deg)}}
 #clock{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;padding:20px;opacity:0;transition:opacity 1.5s ease}
 #clock.show{opacity:1}
 h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:30px;text-align:center;font-weight:400}
@@ -43,13 +39,8 @@ a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color
 </style>
 </head>
 <body>
-<div id="preloader">
-<div class="pre-text" id="pre-text">Загрузка воспоминаний...</div>
-<div class="pre-bar"><div class="pre-fill" id="pre-fill"></div></div>
-<div class="pre-pct" id="pre-pct">0%</div>
-</div>
 <div class="particles" id="particles"></div>
-<div id="clock">
+<div id="clock" class="show">
 <h1>Вспомним, <em>как всё начиналось</em></h1>
 <div class="wrap">
 <img src="clock.png" alt="" class="clock-face">
@@ -62,17 +53,11 @@ a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color
 <a href="timeline.html">Продолжить</a>
 </div>
 <script>
-const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg'];
-const extra=['clock.png','year2025.png','year2026.png'];
-const all=[...photos,...extra];
-let loaded=0,total=all.length;
-const preFill=document.getElementById('pre-fill'),prePct=document.getElementById('pre-pct'),preloader=document.getElementById('preloader'),clock=document.getElementById('clock');
-function updateProgress(){loaded++;const pct=Math.floor((loaded/total)*100);preFill.style.width=pct+'%';prePct.textContent=pct+'%';if(loaded>=total){setTimeout(()=>{preloader.classList.add('done');clock.classList.add('show');startParticles();startClock();},600);}}
-all.forEach(src=>{const img=new Image();img.onload=updateProgress;img.onerror=updateProgress;img.src=src;});
+const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg','photo6.jpg','photo7.jpg','photo8.jpg','photo9.jpg','photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg','photo15.jpg','photo16.jpg','photo17.jpg'];
 function startParticles(){
 const container=document.getElementById('particles');
 for(let i=0;i<60;i++){
-  const isPhoto=Math.random()<.15&&photos.length>0;
+  const isPhoto=Math.random()<.08&&photos.length>0;
   const p=document.createElement('div');
   p.className='particle'+(isPhoto?' photo':' line');
   p.style.left=Math.random()*100+'%';
@@ -90,6 +75,8 @@ function startClock(){
     document.getElementById('y2025').classList.add('in');
   },2500);
 }
+startParticles();
+startClock();
 </script>
 </body>
 </html>
