@@ -7,6 +7,36 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:100vh;width:100vw;overflow:hidden;position:relative}
+
+/* Пятно рассеяния внизу справа */
+.blur-spot{
+  position:fixed;
+  bottom:-100px;
+  right:-100px;
+  width:600px;
+  height:600px;
+  border-radius:50%;
+  background:rgba(182,184,183,.35);
+  filter:blur(80px);
+  z-index:14;
+  pointer-events:none;
+}
+/* Видео сирени снизу справа */
+.lilac-video{
+  position:fixed;
+  bottom:0;
+  right:0;
+  width:45vw;
+  max-width:500px;
+  z-index:15;
+  pointer-events:none;
+  object-fit:contain;
+}
+@media(max-width:480px){
+  .lilac-video{width:60vw;max-width:320px}
+  .blur-spot{width:400px;height:400px;filter:blur(60px)}
+}
+
 .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
 .particle{position:absolute;top:-60px}
 .particle.line{background:rgba(255,255,255,.15);border-radius:1px;animation:fall linear infinite}
@@ -40,6 +70,14 @@ a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color
 </head>
 <body>
 <div class="particles" id="particles"></div>
+
+<!-- Пятно рассеяния справа снизу -->
+<div class="blur-spot"></div>
+<!-- Видео сирени справа снизу -->
+<video class="lilac-video" autoplay loop muted playsinline poster="">
+  <source src="lilac.mp4" type="video/mp4">
+</video>
+
 <div id="clock" class="show">
 <h1>Вспомним, <em>как всё начиналось</em></h1>
 <div class="wrap">
