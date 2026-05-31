@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="ru">
 <head>
@@ -8,33 +9,35 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:100vh;width:100vw;overflow:hidden;position:relative}
 
-/* Пятно рассеяния внизу справа */
+/* Пятно рассеяния внизу справа — больше и мягче */
 .blur-spot{
   position:fixed;
-  bottom:-100px;
-  right:-100px;
-  width:600px;
-  height:600px;
+  bottom:-180px;
+  right:-180px;
+  width:800px;
+  height:800px;
   border-radius:50%;
-  background:rgba(182,184,183,.35);
-  filter:blur(80px);
+  background:rgba(182,184,183,.22);
+  filter:blur(120px);
   z-index:14;
   pointer-events:none;
 }
-/* Видео сирени снизу справа */
+/* Видео сирени снизу справа — меньше, с мягкими краями */
 .lilac-video{
   position:fixed;
-  bottom:0;
-  right:0;
-  width:45vw;
-  max-width:500px;
+  bottom:-30px;
+  right:-30px;
+  width:32vw;
+  max-width:340px;
   z-index:15;
   pointer-events:none;
   object-fit:contain;
+  -webkit-mask-image: radial-gradient(ellipse 75% 75% at 65% 65%, black 30%, transparent 80%);
+  mask-image: radial-gradient(ellipse 75% 75% at 65% 65%, black 30%, transparent 80%);
 }
 @media(max-width:480px){
-  .lilac-video{width:60vw;max-width:320px}
-  .blur-spot{width:400px;height:400px;filter:blur(60px)}
+  .lilac-video{width:45vw;max-width:260px;bottom:-15px;right:-15px}
+  .blur-spot{width:500px;height:500px;filter:blur(80px);bottom:-100px;right:-100px}
 }
 
 .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
@@ -71,10 +74,8 @@ a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color
 <body>
 <div class="particles" id="particles"></div>
 
-<!-- Пятно рассеяния справа снизу -->
 <div class="blur-spot"></div>
-<!-- Видео сирени справа снизу -->
-<video class="lilac-video" autoplay loop muted playsinline poster="">
+<video class="lilac-video" autoplay loop muted playsinline>
   <source src="lilac.mp4" type="video/mp4">
 </video>
 
