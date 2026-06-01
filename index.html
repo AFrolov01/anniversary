@@ -8,7 +8,7 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:100vh;width:100vw;overflow:hidden;position:relative}
 
-/* Пятно рассеяния внизу справа — чёрное, больше */
+/* Пятно рассеяния */
 .blur-spot{
   position:fixed;
   bottom:-180px;
@@ -21,7 +21,7 @@ html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:
   z-index:14;
   pointer-events:none;
 }
-/* Видео сирени снизу справа — больше */
+/* Видео сирени */
 .lilac-video{
   position:fixed;
   bottom:-40px;
@@ -39,12 +39,15 @@ html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:
   .blur-spot{width:450px;height:450px;filter:blur(90px);bottom:-120px;right:-120px}
 }
 
+/* Прелоадер */
 #preloader{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f13;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;transition:opacity 1.2s ease,visibility 1.2s ease}
 #preloader.done{opacity:0;visibility:hidden;pointer-events:none}
 .pre-text{font-family:serif;font-size:1.4rem;color:#d4a5a5;margin-bottom:30px;letter-spacing:1px}
 .pre-bar{width:260px;height:2px;background:rgba(212,165,165,.15);border-radius:2px;overflow:hidden}
 .pre-fill{height:100%;width:0%;background:linear-gradient(90deg,#d4a5a5,#e8c4c4);border-radius:2px;transition:width .3s ease}
 .pre-pct{margin-top:15px;font-size:.75rem;color:rgba(255,255,255,.3);letter-spacing:2px}
+.pre-status{margin-top:8px;font-size:.65rem;color:rgba(255,255,255,.2);letter-spacing:1px}
+
 .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
 .particle{position:absolute;top:-60px}
 .particle.line{background:rgba(255,255,255,.15);border-radius:1px;animation:fall linear infinite}
@@ -52,6 +55,7 @@ html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:
 .particle.photo img{width:100%;height:100%;object-fit:cover;border-radius:4px;opacity:.7;filter:drop-shadow(0 0 4px rgba(212,165,165,.3))}
 @keyframes fall{to{transform:translateY(110vh)}}
 @keyframes fall-rotate{to{transform:translateY(110vh) rotate(360deg)}}
+
 #cover{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;text-align:center;padding:20px;opacity:0;transition:opacity 1.5s ease}
 #cover.show{opacity:1}
 .badge{border:1px solid rgba(212,165,165,.3);padding:8px 24px;border-radius:30px;font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:#d4a5a5;margin-bottom:40px}
@@ -59,53 +63,134 @@ h1{font-family:serif;font-size:clamp(2rem,8vw,4rem);font-weight:300;line-height:
 h1 span{color:#d4a5a5;font-style:italic}
 p{color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:40px;max-width:500px}
 .date{color:rgba(212,165,165,.7);margin-bottom:50px;letter-spacing:2px}
-a{display:inline-block;padding:16px 50px;border:1px solid rgba(212,165,165,.4);color:#e8c4c4;text-decoration:none;border-radius:50px;letter-spacing:3px;font-size:.85rem;transition:.3s}
-a:hover{border-color:#d4a5a5;box-shadow:0 0 30px rgba(212,165,165,.15);transform:translateY(-2px)}
+.btn-link{display:inline-block;padding:16px 50px;border:1px solid rgba(212,165,165,.4);color:#e8c4c4;text-decoration:none;border-radius:50px;letter-spacing:3px;font-size:.85rem;transition:.3s}
+.btn-link:hover{border-color:#d4a5a5;box-shadow:0 0 30px rgba(212,165,165,.15);transform:translateY(-2px)}
 @media(max-width:480px){h1{font-size:2.2rem}}
 </style>
 </head>
 <body>
 <div id="preloader">
-<div class="pre-text" id="pre-text">Загрузка воспоминаний...</div>
-<div class="pre-bar"><div class="pre-fill" id="pre-fill"></div></div>
-<div class="pre-pct" id="pre-pct">0%</div>
+  <div class="pre-text" id="pre-text">Загрузка воспоминаний...</div>
+  <div class="pre-bar"><div class="pre-fill" id="pre-fill"></div></div>
+  <div class="pre-pct" id="pre-pct">0%</div>
+  <div class="pre-status" id="pre-status"></div>
 </div>
 <div class="particles" id="particles"></div>
 
 <div class="blur-spot"></div>
-<video class="lilac-video" autoplay loop muted playsinline>
+<video class="lilac-video" autoplay loop muted playsinline id="lilacVideo">
   <source src="lilac.mp4" type="video/mp4">
 </video>
 
 <div id="cover">
-<div class="badge">Годовщина</div>
-<h1>Один год.<br>Тысячи километров.<br><span>Одна история.</span></h1>
-<p>Я собрал всё, что помню.<br>Все голосовые, все ночи, все «спокойной ночи».<br>Это для тебя.</p>
-<div class="date">3 июня 2025 — 3 июня 2026</div>
-<a href="clock.html">Открыть воспоминания</a>
+  <div class="badge">Годовщина</div>
+  <h1>Один год.<br>Тысячи километров.<br><span>Одна история.</span></h1>
+  <p>Я собрал всё, что помню.<br>Все голосовые, все ночи, все «спокойной ночи».<br>Это для тебя.</p>
+  <div class="date">3 июня 2025 — 3 июня 2026</div>
+  <a href="clock.html" class="btn-link">Открыть воспоминания</a>
 </div>
+
 <script>
-const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg','photo6.jpg','photo7.jpg','photo8.jpg','photo9.jpg','photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg','photo15.jpg','photo16.jpg','photo17.jpg'];
-let loaded=0,total=photos.length;
-const preFill=document.getElementById('pre-fill'),prePct=document.getElementById('pre-pct'),preloader=document.getElementById('preloader'),cover=document.getElementById('cover');
-function updateProgress(){loaded++;const pct=Math.floor((loaded/total)*100);preFill.style.width=pct+'%';prePct.textContent=pct+'%';if(loaded>=total){setTimeout(()=>{preloader.classList.add('done');cover.classList.add('show');startParticles();},600);}}
-photos.forEach(src=>{const img=new Image();img.onload=updateProgress;img.onerror=updateProgress;img.src=src;});
-if(total===0){preloader.classList.add('done');cover.classList.add('show');startParticles();}
-function startParticles(){
-const container=document.getElementById('particles');
-for(let i=0;i<60;i++){
-  const isPhoto=Math.random()<.08&&photos.length>0;
-  const p=document.createElement('div');
-  p.className='particle'+(isPhoto?' photo':' line');
-  p.style.left=Math.random()*100+'%';
-  p.style.width=(isPhoto?40:Math.random()*2+1)+'px';
-  p.style.height=(isPhoto?40:Math.random()*12+4)+'px';
-  p.style.opacity=isPhoto?.6:(Math.random()*.3+.05);
-  p.style.animationDuration=(Math.random()*8+4)+'s';
-  p.style.animationDelay=(Math.random()*10)+'s';
-  if(isPhoto){const img=document.createElement('img');img.src=photos[Math.floor(Math.random()*photos.length)];p.appendChild(img);}
-  container.appendChild(p);
-}}
+// === ВСЕ РЕСУРСЫ САЙТА ===
+const photos = [
+  'photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg','photo6.jpg','photo7.jpg',
+  'photo8.jpg','photo9.jpg','photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg',
+  'photo15.jpg','photo16.jpg','photo17.jpg'
+];
+
+const imageAssets = [
+  'clock.png',
+  'year2025.png',
+  'year2026.png',
+  'rope.png'
+];
+
+const videoAssets = [
+  'lilac.mp4'
+];
+
+// Объединяем все ресурсы для загрузки
+const allResources = [];
+photos.forEach(p => allResources.push({type:'photo', src:p}));
+imageAssets.forEach(a => allResources.push({type:'image', src:a}));
+videoAssets.forEach(v => allResources.push({type:'video', src:v}));
+
+let loaded = 0;
+const total = allResources.length;
+const preFill = document.getElementById('pre-fill');
+const prePct = document.getElementById('pre-pct');
+const preStatus = document.getElementById('pre-status');
+const preloader = document.getElementById('preloader');
+const cover = document.getElementById('cover');
+
+function updateProgress(resource) {
+  loaded++;
+  const pct = Math.floor((loaded / total) * 100);
+  preFill.style.width = pct + '%';
+  prePct.textContent = pct + '%';
+  if (resource) {
+    preStatus.textContent = resource.type === 'photo' ? 'Фото: ' + resource.src : resource.src;
+  }
+
+  if (loaded >= total) {
+    // Всё загружено — показываем ковер
+    preStatus.textContent = 'Готово!';
+    setTimeout(() => {
+      preloader.classList.add('done');
+      cover.classList.add('show');
+      startParticles();
+    }, 400);
+  }
+}
+
+// Загрузка всех ресурсов
+allResources.forEach(res => {
+  if (res.type === 'video') {
+    // Для видео — ждем загрузки метаданных
+    const vid = document.getElementById('lilacVideo');
+    if (vid.readyState >= 2) {
+      updateProgress(res);
+    } else {
+      vid.addEventListener('loadeddata', () => updateProgress(res), {once:true});
+      vid.addEventListener('error', () => updateProgress(res), {once:true});
+      // Таймаут на случай если событие не сработает
+      setTimeout(() => updateProgress(res), 5000);
+    }
+  } else {
+    const img = new Image();
+    img.onload = () => updateProgress(res);
+    img.onerror = () => updateProgress(res);
+    img.src = res.src;
+  }
+});
+
+// Защита от зависания — если что-то не загрузится
+setTimeout(() => {
+  if (loaded < total) {
+    while (loaded < total) updateProgress(null);
+  }
+}, 15000);
+
+function startParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 60; i++) {
+    const isPhoto = Math.random() < .08 && photos.length > 0;
+    const p = document.createElement('div');
+    p.className = 'particle' + (isPhoto ? ' photo' : ' line');
+    p.style.left = Math.random() * 100 + '%';
+    p.style.width = (isPhoto ? 40 : Math.random() * 2 + 1) + 'px';
+    p.style.height = (isPhoto ? 40 : Math.random() * 12 + 4) + 'px';
+    p.style.opacity = isPhoto ? .6 : (Math.random() * .3 + .05);
+    p.style.animationDuration = (Math.random() * 8 + 4) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    if (isPhoto) {
+      const img = document.createElement('img');
+      img.src = photos[Math.floor(Math.random() * photos.length)];
+      p.appendChild(img);
+    }
+    container.appendChild(p);
+  }
+}
 </script>
 </body>
 </html>

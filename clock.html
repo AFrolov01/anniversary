@@ -7,20 +7,18 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:100vh;width:100vw;overflow:hidden;position:relative}
+
+/* Блур и видео */
 .blur-spot{position:fixed;bottom:-180px;right:-180px;width:700px;height:700px;border-radius:50%;background:rgba(0,0,0,.55);filter:blur(120px);z-index:14;pointer-events:none}
 .lilac-video{position:fixed;bottom:-40px;right:-40px;width:50vw;max-width:520px;z-index:15;pointer-events:none;object-fit:contain;-webkit-mask-image:radial-gradient(ellipse 75% 75% at 65% 65%,black 30%,transparent 80%);mask-image:radial-gradient(ellipse 75% 75% at 65% 65%,black 30%,transparent 80%)}
 @media(max-width:480px){.lilac-video{width:60vw;max-width:380px;bottom:-20px;right:-20px}.blur-spot{width:450px;height:450px;filter:blur(90px);bottom:-120px;right:-120px}}
-.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
-.particle{position:absolute;top:-60px}
-.particle.line{background:rgba(255,255,255,.15);border-radius:1px;animation:fall linear infinite}
-.particle.photo{animation:fall-rotate linear infinite}
-.particle.photo img{width:100%;height:100%;object-fit:cover;border-radius:4px;opacity:.7;filter:drop-shadow(0 0 4px rgba(212,165,165,.3))}
-@keyframes fall{to{transform:translateY(110vh)}}
-@keyframes fall-rotate{to{transform:translateY(110vh) rotate(360deg)}}
+
+/* ЧАСЫ — страница 1 */
 #clock{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;padding:20px;opacity:0;transition:opacity 1.5s ease}
 #clock.show{opacity:1}
-h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:30px;text-align:center;font-weight:400}
-h1 em{font-style:italic;color:#d4a5a5}
+#clock.fall{transition:transform 1.2s cubic-bezier(.4,0,.2,1),opacity .8s ease;transform:translateY(120vh) rotate(25deg);opacity:0;pointer-events:none}
+.clock-h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:30px;text-align:center;font-weight:400}
+.clock-h1 em{font-style:italic;color:#d4a5a5}
 .wrap{position:relative;width:min(90vw,450px);height:min(90vw,450px);display:flex;align-items:center;justify-content:center}
 .wrap img.clock-face{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 20px rgba(0,0,0,.5))}
 .year-img{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);z-index:5;width:70px;height:auto;pointer-events:none;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.4,0,.2,1)}
@@ -37,52 +35,431 @@ h1 em{font-style:italic;color:#d4a5a5}
 @keyframes sm{0%{transform:rotate(278deg)}100%{transform:rotate(-82deg)}}
 @keyframes ss{0%{transform:rotate(195deg);opacity:.85}20%{opacity:1}100%{transform:rotate(-165deg);opacity:.7}}
 .cap{margin-top:40px;color:rgba(212,165,165,.6);font-family:serif;letter-spacing:2px;text-align:center}
-a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;transition:.3s}
-a:hover{border-color:#d4a5a5;box-shadow:0 0 30px rgba(212,165,165,.15);transform:translateY(-2px)}
-@media(max-width:480px){.wrap{width:min(95vw,380px);height:min(95vw,380px)}h1{margin-bottom:20px;font-size:1.4rem}.year-img{width:60px;top:40%}}
+.continue-btn{display:inline-block;margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;transition:.3s;background:transparent;cursor:pointer;font-family:system-ui,sans-serif}
+.continue-btn:hover{border-color:#d4a5a5;box-shadow:0 0 30px rgba(212,165,165,.15);transform:translateY(-2px)}
+.continue-btn.fall-btn{transition:transform 1.2s cubic-bezier(.4,0,.2,1),opacity .8s ease}
+
+/* Тряска экрана */
+@keyframes shake{0%,100%{transform:translate(0,0)}10%{transform:translate(-5px,4px)}20%{transform:translate(5px,-4px)}30%{transform:translate(-4px,3px)}40%{transform:translate(4px,-3px)}50%{transform:translate(-3px,2px)}60%{transform:translate(3px,-2px)}70%{transform:translate(-2px,1px)}80%{transform:translate(2px,-1px)}90%{transform:translate(0,0)}}
+body.shaking{animation:shake .5s ease}
+
+/* КОЛЕСО ФОРТУНЫ — контейнер */
+.wheel-scene{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:20;opacity:0;transition:opacity .3s ease}
+.wheel-scene.active{pointer-events:auto}
+.wheel-scene.show{opacity:1}
+
+/* Верёвки — идут от верха экрана до колеса */
+.rope{position:absolute;top:-75vh;width:18px;height:75vh;object-fit:cover;opacity:.9;z-index:19}
+.rope-left{left:calc(50% - min(36vw,180px) - 9px)}
+.rope-right{left:calc(50% + min(36vw,180px) - 9px)}
+
+/* SVG колеса */
+.wheel-wrap{position:absolute;top:50%;left:50%;width:min(80vw,400px);height:min(80vw,400px);transform:translate(-50%,-50%) translateY(-130vh);z-index:21}
+.wheel-svg{width:100%;height:100%;filter:drop-shadow(0 8px 30px rgba(0,0,0,.7))}
+#wheelGroup{transform-origin:center}
+.pin{fill:#555;transition:fill .08s,filter .08s}
+.pin.lit{fill:#fff;filter:drop-shadow(0 0 10px #fff)}
+
+/* Анимация падения колеса */
+.wheel-wrap.drop{animation:wheelDrop 2.2s cubic-bezier(.25,.46,.45,.94) forwards}
+@keyframes wheelDrop{
+  0%{transform:translate(-50%,-50%) translateY(-130vh)}
+  55%{transform:translate(-50%,-50%) translateY(0)}
+  65%{transform:translate(-50%,-50%) translateY(-14px)}
+  75%{transform:translate(-50%,-50%) translateY(6px)}
+  85%{transform:translate(-50%,-50%) translateY(-3px)}
+  100%{transform:translate(-50%,-50%) translateY(0)}
+}
+/* Установка на место часов */
+.wheel-wrap.settle{animation:settle 1.2s ease forwards}
+@keyframes settle{0%{transform:translate(-50%,-50%) translateY(0)}100%{transform:translate(-50%,-50%) translateY(0)}}
+/* Покачивание */
+.wheel-wrap.swing{animation:swing 4s ease-in-out infinite}
+@keyframes swing{0%,100%{transform:translate(-50%,-50%) rotate(-1.2deg)}50%{transform:translate(-50%,-50%) rotate(1.2deg)}}
+/* Затемнение после выпадения */
+.wheel-wrap.dimmed .wheel-svg{transition:filter 1s ease;filter:brightness(.25) drop-shadow(0 8px 30px rgba(0,0,0,.7))}
+
+/* Стрелка — смотрит ВНИЗ, над колесом */
+.arrow-box{position:absolute;top:calc(50% - min(40vw,200px) - 42px);left:50%;transform:translateX(-50%);z-index:22;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));opacity:0;transition:opacity .6s ease}
+.arrow-box.show{opacity:1}
+.arrow-box svg{width:36px;height:42px}
+
+/* Кнопка Крутить — на верёвке */
+.spin-btn-wrap{position:absolute;top:calc(50% + min(40vw,200px) + 30px);left:50%;transform:translateX(-50%) translateY(20px);z-index:22;opacity:0;transition:opacity .8s ease,transform .8s ease;pointer-events:none}
+.spin-btn-wrap.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
+.spin-btn-wrap .rope-btn{position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:3px;height:50px;background:linear-gradient(to bottom,#c4a882,#8b7355);border-radius:2px;opacity:0;transition:opacity .5s ease}
+.spin-btn-wrap.show .rope-btn{opacity:1}
+.spin-btn{display:inline-block;padding:14px 45px;border:2px solid #d4a5a5;color:#e8c4c4;background:rgba(10,10,15,.9);border-radius:50px;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:.3s;font-family:serif}
+.spin-btn:hover{border-color:#e8c4c4;box-shadow:0 0 25px rgba(212,165,165,.2);transform:translateY(-2px)}
+.spin-btn:disabled{opacity:.5;cursor:not-allowed}
+
+/* Результат */
+.result-overlay{position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(10,10,15,.82);z-index:30;display:flex;flex-direction:column;align-items:center;justify-content:center;opacity:0;pointer-events:none;transition:opacity 1s ease}
+.result-overlay.show{opacity:1;pointer-events:auto}
+.result-emoji{font-size:4rem;margin-bottom:15px;animation:emojiPop .5s cubic-bezier(.34,1.56,.64,1)}
+@keyframes emojiPop{0%{transform:scale(0)}70%{transform:scale(1.2)}100%{transform:scale(1)}}
+.result-text{font-family:serif;font-size:clamp(1.6rem,5vw,2.5rem);color:#e8c4c4;text-align:center;margin-bottom:35px;text-shadow:0 4px 20px rgba(0,0,0,.5)}
+.result-next-btn{display:inline-block;padding:14px 45px;border:2px solid rgba(212,165,165,.5);color:#e8c4c4;background:rgba(10,10,15,.9);text-decoration:none;border-radius:50px;letter-spacing:3px;font-size:.85rem;text-transform:uppercase;transition:.3s;font-family:serif;cursor:pointer}
+.result-next-btn:hover{border-color:#d4a5a5;box-shadow:0 0 25px rgba(212,165,165,.2);transform:translateY(-2px)}
+
+/* Частицы */
+.particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
+.particle{position:absolute;top:-60px}
+.particle.line{background:rgba(255,255,255,.15);border-radius:1px;animation:fall linear infinite}
+.particle.photo{animation:fall-rotate linear infinite}
+.particle.photo img{width:100%;height:100%;object-fit:cover;border-radius:4px;opacity:.7;filter:drop-shadow(0 0 4px rgba(212,165,165,.3))}
+@keyframes fall{to{transform:translateY(110vh)}}
+@keyframes fall-rotate{to{transform:translateY(110vh) rotate(360deg)}}
+
+@media(max-width:480px){
+  .wrap{width:min(95vw,380px);height:min(95vw,380px)}
+  .clock-h1{margin-bottom:20px;font-size:1.4rem}
+  .year-img{width:60px;top:40%}
+  .rope{width:14px}
+  .rope-left{left:calc(50% - min(38vw,160px) - 7px)}
+  .rope-right{left:calc(50% + min(38vw,160px) - 7px)}
+}
 </style>
 </head>
 <body>
 <div class="particles" id="particles"></div>
 <div class="blur-spot"></div>
 <video class="lilac-video" autoplay loop muted playsinline><source src="lilac.mp4" type="video/mp4"></video>
+
+<!-- ==================== СТРАНИЦА ЧАСЫ ==================== -->
 <div id="clock" class="show">
-<h1>Вспомним, <em>как всё начиналось</em></h1>
-<div class="wrap">
-<img src="clock.png" alt="" class="clock-face">
-<img src="year2026.png" alt="" class="year-img year-2026" id="y2026">
-<img src="year2025.png" alt="" class="year-img year-2025" id="y2025">
-<div class="hand hh"></div><div class="hand hm"></div><div class="hand hs"></div>
-<div class="dot"></div>
+  <h1 class="clock-h1">Вспомним, <em>как всё начиналось</em></h1>
+  <div class="wrap">
+    <img src="clock.png" alt="" class="clock-face">
+    <img src="year2026.png" alt="" class="year-img year-2026" id="y2026">
+    <img src="year2025.png" alt="" class="year-img year-2025" id="y2025">
+    <div class="hand hh"></div>
+    <div class="hand hm"></div>
+    <div class="hand hs"></div>
+    <div class="dot"></div>
+  </div>
+  <p class="cap">Год назад всё было иначе...</p>
+  <button class="continue-btn" id="continueBtn" onclick="startWheelScene()">Продолжить</button>
 </div>
-<p class="cap">Год назад всё было иначе...</p>
-<a href="wheel.html">Продолжить</a>
+
+<!-- ==================== КОЛЕСО ФОРТУНЫ ==================== -->
+<div class="wheel-scene" id="wheelScene">
+  <!-- Верёвки -->
+  <img src="rope.png" class="rope rope-left" id="ropeLeft" alt="">
+  <img src="rope.png" class="rope rope-right" id="ropeRight" alt="">
+
+  <!-- Колесо -->
+  <div class="wheel-wrap wheel-dim" id="wheelWrap">
+    <svg class="wheel-svg" viewBox="0 0 500 500" id="wheelSvg">
+      <g id="wheelGroup"></g>
+      <circle cx="250" cy="250" r="42" fill="#1a1510" stroke="#d4a5a5" stroke-width="2"/>
+      <circle cx="250" cy="250" r="18" fill="#0a0a0f"/>
+    </svg>
+  </div>
+
+  <!-- Стрелка -->
+  <div class="arrow-box" id="arrowBox">
+    <svg viewBox="0 0 36 42"><polygon points="18,42 0,0 18,14 36,0" fill="#d4a5a5"/></svg>
+  </div>
+
+  <!-- Кнопка Крутить на верёвке -->
+  <div class="spin-btn-wrap" id="spinBtnWrap">
+    <div class="rope-btn"></div>
+    <button class="spin-btn" id="spinBtn" onclick="startSpin()">Крутить</button>
+  </div>
 </div>
+
+<!-- Результат -->
+<div class="result-overlay" id="resultOverlay">
+  <div class="result-emoji" id="resultEmoji"></div>
+  <div class="result-text" id="resultText"></div>
+  <a href="timeline.html" class="result-next-btn">Продолжить</a>
+</div>
+
 <script>
-const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg','photo6.jpg','photo7.jpg','photo8.jpg','photo9.jpg','photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg','photo15.jpg','photo16.jpg','photo17.jpg'];
-// Фоновая предзагрузка всех фото
-photos.forEach(src=>{const img=new Image();img.src=src;});
-function startParticles(){
-const container=document.getElementById('particles');
-for(let i=0;i<60;i++){
-  const isPhoto=Math.random()<.08&&photos.length>0;
-  const p=document.createElement('div');
-  p.className='particle'+(isPhoto?' photo':' line');
-  p.style.left=Math.random()*100+'%';
-  p.style.width=(isPhoto?40:Math.random()*2+1)+'px';
-  p.style.height=(isPhoto?40:Math.random()*12+4)+'px';
-  p.style.opacity=isPhoto?.6:(Math.random()*.3+.05);
-  p.style.animationDuration=(Math.random()*8+4)+'s';
-  p.style.animationDelay=(Math.random()*10)+'s';
-  if(isPhoto){const img=document.createElement('img');img.src=photos[Math.floor(Math.random()*photos.length)];p.appendChild(img);}
-  container.appendChild(p);
-}}
-function startClock(){
-  setTimeout(()=>{
+// ==========================================
+// СЕКТОРА КОЛЕСА — рандом при каждом заходе
+// ==========================================
+const sectorsBase = [
+  {text:'Тест',emoji:'✅',color:'#c0392b'},
+  {text:'Банан',emoji:'😱',color:'#e67e22'},
+  {text:'Карта воспоминаний',emoji:'🦯',color:'#27ae60'},
+  {text:'Купон',emoji:'🤫',color:'#8e44ad'},
+  {text:'Стата вся',emoji:'💫',color:'#2980b9'}
+];
+// Полностью рандомный порядок при каждом заходе
+const sectors = [...sectorsBase].sort(() => Math.random() - .5);
+const segAngle = 360 / sectors.length;
+
+const wheelGroup = document.getElementById('wheelGroup');
+const wheelWrap = document.getElementById('wheelWrap');
+const wheelScene = document.getElementById('wheelScene');
+const arrowBox = document.getElementById('arrowBox');
+const spinBtn = document.getElementById('spinBtn');
+const spinBtnWrap = document.getElementById('spinBtnWrap');
+const resultOverlay = document.getElementById('resultOverlay');
+const resultText = document.getElementById('resultText');
+const resultEmoji = document.getElementById('resultEmoji');
+const clockEl = document.getElementById('clock');
+const continueBtn = document.getElementById('continueBtn');
+
+// ==========================================
+// РИСУЕМ КОЛЕСО с колышками
+// ==========================================
+const radius = 200;
+const pinRadius = radius + 14;
+const pins = [];
+
+sectors.forEach((s, i) => {
+  const startA = (i * segAngle - 90) * Math.PI / 180;
+  const endA = ((i + 1) * segAngle - 90) * Math.PI / 180;
+  const x1 = 250 + Math.cos(startA) * radius, y1 = 250 + Math.sin(startA) * radius;
+  const x2 = 250 + Math.cos(endA) * radius, y2 = 250 + Math.sin(endA) * radius;
+
+  // Сектор
+  const path = document.createElementNS('http://www.w3.org/2000/svg','path');
+  path.setAttribute('d', `M 250 250 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`);
+  path.setAttribute('fill', s.color);
+  path.setAttribute('stroke', '#0a0a0f');
+  path.setAttribute('stroke-width', '3');
+  wheelGroup.appendChild(path);
+
+  // Текст сектора
+  const midA = (i * segAngle + segAngle / 2 - 90) * Math.PI / 180;
+  const tx = 250 + Math.cos(midA) * (radius * .55);
+  const ty = 250 + Math.sin(midA) * (radius * .55);
+  const text = document.createElementNS('http://www.w3.org/2000/svg','text');
+  text.setAttribute('x', tx);
+  text.setAttribute('y', ty);
+  text.setAttribute('text-anchor', 'middle');
+  text.setAttribute('dominant-baseline', 'middle');
+  text.setAttribute('fill', '#fff');
+  text.setAttribute('font-size', '15');
+  text.setAttribute('font-family', 'serif');
+  text.setAttribute('font-weight', 'bold');
+  // Поворачиваем текст радиально
+  text.setAttribute('transform', `rotate(${i * segAngle + segAngle / 2}, ${tx}, ${ty})`);
+  text.textContent = s.text;
+  wheelGroup.appendChild(text);
+
+  // Колышки по краям каждого сектора
+  for (let j = 0; j <= 1; j++) {
+    const a = ((i + j) * segAngle - 90) * Math.PI / 180;
+    const px = 250 + Math.cos(a) * pinRadius;
+    const py = 250 + Math.sin(a) * pinRadius;
+    const pin = document.createElementNS('http://www.w3.org/2000/svg','circle');
+    pin.setAttribute('cx', px);
+    pin.setAttribute('cy', py);
+    pin.setAttribute('r', '5.5');
+    pin.setAttribute('class', 'pin');
+    wheelGroup.appendChild(pin);
+    pins.push({el: pin, angle: (i + j) * segAngle});
+  }
+});
+
+// ==========================================
+// ФИЗИКА КОЛЕСА с колышками
+// ==========================================
+let angle = 0, velocity = 0, isSpinning = false;
+const friction = .982;
+const minVel = .08;
+const pinResistance = .965; // Сопротивление при касании колышка
+const pinThreshold = 10; // Градусы для зажигания
+
+function getPinDiff(pinAngle, wheelAngle) {
+  // Абсолютный угол пина (куда он указывает относительно верха)
+  const absAngle = ((pinAngle + wheelAngle) % 360 + 360) % 360;
+  // Стрелка смотрит ВНИЗ = 270° (или -90°)
+  const arrowAngle = 270;
+  // Кратчайшее расстояние по кругу
+  let diff = Math.abs(absAngle - arrowAngle);
+  if (diff > 180) diff = 360 - diff;
+  return diff;
+}
+
+function updatePins() {
+  // Обновляем состояние колышков
+  pins.forEach(p => {
+    const diff = getPinDiff(p.angle, angle);
+    if (diff < pinThreshold) {
+      p.el.classList.add('lit');
+    } else {
+      p.el.classList.remove('lit');
+    }
+  });
+}
+
+function applyPinPhysics() {
+  // Физика перекатывания: когда колышек подходит к стрелке — сопротивление
+  let nearestPinDist = 360;
+  pins.forEach(p => {
+    const diff = getPinDiff(p.angle, angle);
+    if (diff < nearestPinDist) nearestPinDist = diff;
+  });
+
+  // Если колышек очень близко — замедляем (эффект перекатывания)
+  if (nearestPinDist < 6 && velocity > 1.5) {
+    velocity *= pinResistance;
+  }
+  // Умеренное сопротивление при средней близости
+  else if (nearestPinDist < 12 && velocity > 3) {
+    velocity *= .975;
+  }
+}
+
+let lastSoundPin = -1;
+
+function animate() {
+  if (!isSpinning) return;
+
+  angle += velocity;
+  velocity *= friction;
+
+  // Применяем физику колышков
+  applyPinPhysics();
+
+  // Звуковой эффект при прохождении колышка (визуальный тик)
+  let currentNearest = -1, minDist = 360;
+  pins.forEach((p, idx) => {
+    const diff = getPinDiff(p.angle, angle);
+    if (diff < minDist) { minDist = diff; currentNearest = idx; }
+  });
+  if (currentNearest !== lastSoundPin && minDist < 8) {
+    lastSoundPin = currentNearest;
+  }
+
+  if (velocity < minVel) {
+    velocity = 0;
+    isSpinning = false;
+    finishSpin();
+    return;
+  }
+
+  wheelGroup.style.transform = `rotate(${angle}deg)`;
+  updatePins();
+  requestAnimationFrame(animate);
+}
+
+function startSpin() {
+  if (isSpinning) return;
+  spinBtn.disabled = true;
+  // Случайная скорость — достаточно быстрая для хорошей физики
+  velocity = 22 + Math.random() * 18;
+  isSpinning = true;
+  lastSoundPin = -1;
+  animate();
+}
+
+function finishSpin() {
+  // Определяем победителя
+  // Стрелка смотрит ВНИЗ (угол 270°)
+  // Угол колеса = angle % 360
+  // Сектор под стрелкой = тот, на который указывает 270°
+  const cur = (angle % 360 + 360) % 360;
+  // Нормализуем: какой сектор на угле 270° относительно вращения
+  const arrowAngle = 270;
+  const relativeAngle = ((arrowAngle - cur) % 360 + 360) % 360;
+  const idx = Math.floor(relativeAngle / segAngle) % sectors.length;
+  const winner = sectors[idx];
+
+  setTimeout(() => {
+    wheelWrap.classList.add('dimmed');
+    resultEmoji.textContent = winner.emoji;
+    resultText.innerHTML = `Выпало:<br><span style="color:${winner.color}">${winner.text}</span>`;
+    resultOverlay.classList.add('show');
+  }, 600);
+}
+
+// ==========================================
+// СЦЕНАРИЙ: Колесо падает на часы
+// ==========================================
+let sceneStarted = false;
+
+function startWheelScene() {
+  if (sceneStarted) return;
+  sceneStarted = true;
+
+  continueBtn.disabled = true;
+
+  // 1. Показываем сцену колеса
+  wheelScene.classList.add('active');
+  wheelScene.classList.add('show');
+
+  // 2. Колесо начинает падать
+  setTimeout(() => {
+    wheelWrap.classList.add('drop');
+  }, 100);
+
+  // 3. УДАР — тряска + часы подкашиваются
+  setTimeout(() => {
+    document.body.classList.add('shaking');
+    clockEl.style.transition = 'transform .5s cubic-bezier(.4,0,.2,1)';
+    clockEl.style.transform = 'translateY(15px) rotate(6deg)';
+    setTimeout(() => { document.body.classList.remove('shaking'); }, 500);
+  }, 1200);
+
+  // 4. Часы падают окончательно вместе с кнопкой
+  setTimeout(() => {
+    clockEl.classList.add('fall');
+    continueBtn.classList.add('fall-btn');
+    continueBtn.style.transform = 'translateY(120vh)';
+    continueBtn.style.opacity = '0';
+  }, 1800);
+
+  // 5. Колесо устанавливается на место
+  setTimeout(() => {
+    wheelWrap.classList.remove('drop');
+    wheelWrap.classList.add('settle');
+  }, 2000);
+
+  // 6. Колесо покачивается + появляется стрелка + кнопка
+  setTimeout(() => {
+    wheelWrap.classList.remove('settle');
+    wheelWrap.classList.add('swing');
+    arrowBox.classList.add('show');
+    spinBtnWrap.classList.add('show');
+  }, 3300);
+}
+
+// ==========================================
+// ЧАСЫ — смена года
+// ==========================================
+function startClock() {
+  setTimeout(() => {
     document.getElementById('y2026').classList.add('out');
     document.getElementById('y2025').classList.add('in');
-  },2500);
+  }, 2500);
 }
+
+// ==========================================
+// ЧАСТИЦЫ
+// ==========================================
+const photos = ['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg','photo6.jpg','photo7.jpg','photo8.jpg','photo9.jpg','photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg','photo15.jpg','photo16.jpg','photo17.jpg'];
+
+// Предзагрузка фото
+photos.forEach(src => { const img = new Image(); img.src = src; });
+
+function startParticles() {
+  const container = document.getElementById('particles');
+  for (let i = 0; i < 60; i++) {
+    const isPhoto = Math.random() < .08 && photos.length > 0;
+    const p = document.createElement('div');
+    p.className = 'particle' + (isPhoto ? ' photo' : ' line');
+    p.style.left = Math.random() * 100 + '%';
+    p.style.width = (isPhoto ? 40 : Math.random() * 2 + 1) + 'px';
+    p.style.height = (isPhoto ? 40 : Math.random() * 12 + 4) + 'px';
+    p.style.opacity = isPhoto ? .6 : (Math.random() * .3 + .05);
+    p.style.animationDuration = (Math.random() * 8 + 4) + 's';
+    p.style.animationDelay = (Math.random() * 10) + 's';
+    if (isPhoto) {
+      const img = document.createElement('img');
+      img.src = photos[Math.floor(Math.random() * photos.length)];
+      p.appendChild(img);
+    }
+    container.appendChild(p);
+  }
+}
+
 startParticles();
 startClock();
 </script>
