@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Один год</title>
+<title>Вспомним</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:100vh;width:100vw;overflow:hidden;position:relative}
@@ -39,12 +39,6 @@ html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:
   .blur-spot{width:450px;height:450px;filter:blur(90px);bottom:-120px;right:-120px}
 }
 
-#preloader{position:fixed;top:0;left:0;width:100%;height:100%;background:#0f0f13;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:1000;transition:opacity 1.2s ease,visibility 1.2s ease}
-#preloader.done{opacity:0;visibility:hidden;pointer-events:none}
-.pre-text{font-family:serif;font-size:1.4rem;color:#d4a5a5;margin-bottom:30px;letter-spacing:1px}
-.pre-bar{width:260px;height:2px;background:rgba(212,165,165,.15);border-radius:2px;overflow:hidden}
-.pre-fill{height:100%;width:0%;background:linear-gradient(90deg,#d4a5a5,#e8c4c4);border-radius:2px;transition:width .3s ease}
-.pre-pct{margin-top:15px;font-size:.75rem;color:rgba(255,255,255,.3);letter-spacing:2px}
 .particles{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:0;overflow:hidden}
 .particle{position:absolute;top:-60px}
 .particle.line{background:rgba(255,255,255,.15);border-radius:1px;animation:fall linear infinite}
@@ -52,24 +46,31 @@ html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:
 .particle.photo img{width:100%;height:100%;object-fit:cover;border-radius:4px;opacity:.7;filter:drop-shadow(0 0 4px rgba(212,165,165,.3))}
 @keyframes fall{to{transform:translateY(110vh)}}
 @keyframes fall-rotate{to{transform:translateY(110vh) rotate(360deg)}}
-#cover{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:10;text-align:center;padding:20px;opacity:0;transition:opacity 1.5s ease}
-#cover.show{opacity:1}
-.badge{border:1px solid rgba(212,165,165,.3);padding:8px 24px;border-radius:30px;font-size:.75rem;letter-spacing:4px;text-transform:uppercase;color:#d4a5a5;margin-bottom:40px}
-h1{font-family:serif;font-size:clamp(2rem,8vw,4rem);font-weight:300;line-height:1.2;margin-bottom:20px}
-h1 span{color:#d4a5a5;font-style:italic}
-p{color:rgba(255,255,255,.5);line-height:1.8;margin-bottom:40px;max-width:500px}
-.date{color:rgba(212,165,165,.7);margin-bottom:50px;letter-spacing:2px}
-a{display:inline-block;padding:16px 50px;border:1px solid rgba(212,165,165,.4);color:#e8c4c4;text-decoration:none;border-radius:50px;letter-spacing:3px;font-size:.85rem;transition:.3s}
-a:hover{border-color:#d4a5a5;box-shadow:0 0 30px rgba(212,165,165,.15);transform:translateY(-2px)}
-@media(max-width:480px){h1{font-size:2.2rem}}
+#clock{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;padding:20px;opacity:0;transition:opacity 1.5s ease}
+#clock.show{opacity:1}
+h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:30px;text-align:center;font-weight:400}
+h1 em{font-style:italic;color:#d4a5a5}
+.wrap{position:relative;width:min(90vw,450px);height:min(90vw,450px);display:flex;align-items:center;justify-content:center}
+.wrap img.clock-face{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 20px rgba(0,0,0,.5))}
+.year-img{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);z-index:5;width:70px;height:auto;pointer-events:none;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.4,0,.2,1)}
+.year-2026{opacity:1}
+.year-2025{opacity:0;transform:translate(-50%,-50%) translateX(-20px)}
+.year-2026.out{opacity:0;transform:translate(-50%,-50%) translateX(20px)}
+.year-2025.in{opacity:1;transform:translate(-50%,-50%) translateX(0)}
+.hand{position:absolute;bottom:50%;left:50%;transform-origin:bottom center;border-radius:4px;z-index:6;box-shadow:2px 2px 5px rgba(0,0,0,.3);pointer-events:none}
+.hh{width:5px;height:26%;background:#1a1510;margin-left:-2.5px;transform:rotate(232deg);border-radius:3px 3px 0 0;animation:sh 5.5s cubic-bezier(.4,0,.2,1) forwards}
+.hm{width:3px;height:35%;background:#1a1510;margin-left:-1.5px;transform:rotate(278deg);border-radius:2px 2px 0 0;animation:sm 4s cubic-bezier(.4,0,.2,1) forwards}
+.hs{width:1.5px;height:38%;background:#3a2010;margin-left:-.75px;transform:rotate(195deg);opacity:.85;animation:ss 2.5s cubic-bezier(.4,0,.2,1) forwards}
+.dot{position:absolute;width:12px;height:12px;background:#1a1510;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:7;box-shadow:0 2px 5px rgba(0,0,0,.35)}
+@keyframes sh{0%{transform:rotate(232deg)}100%{transform:rotate(-128deg)}}
+@keyframes sm{0%{transform:rotate(278deg)}100%{transform:rotate(-82deg)}}
+@keyframes ss{0%{transform:rotate(195deg);opacity:.85}20%{opacity:1}100%{transform:rotate(-165deg);opacity:.7}}
+.cap{margin-top:40px;color:rgba(212,165,165,.6);font-family:serif;letter-spacing:2px;text-align:center}
+a{margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase}
+@media(max-width:480px){.wrap{width:min(95vw,380px);height:min(95vw,380px)}h1{margin-bottom:20px;font-size:1.4rem}.year-img{width:60px;top:40%}}
 </style>
 </head>
 <body>
-<div id="preloader">
-<div class="pre-text" id="pre-text">Загрузка воспоминаний...</div>
-<div class="pre-bar"><div class="pre-fill" id="pre-fill"></div></div>
-<div class="pre-pct" id="pre-pct">0%</div>
-</div>
 <div class="particles" id="particles"></div>
 
 <div class="blur-spot"></div>
@@ -77,20 +78,20 @@ a:hover{border-color:#d4a5a5;box-shadow:0 0 30px rgba(212,165,165,.15);transform
   <source src="lilac.mp4" type="video/mp4">
 </video>
 
-<div id="cover">
-<div class="badge">Годовщина</div>
-<h1>Один год.<br>Тысячи километров.<br><span>Одна история.</span></h1>
-<p>Я собрал всё, что помню.<br>Все голосовые, все ночи, все «спокойной ночи».<br>Это для тебя.</p>
-<div class="date">3 июня 2025 — 3 июня 2026</div>
-<a href="clock.html">Открыть воспоминания</a>
+<div id="clock" class="show">
+<h1>Вспомним, <em>как всё начиналось</em></h1>
+<div class="wrap">
+<img src="clock.png" alt="" class="clock-face">
+<img src="year2026.png" alt="" class="year-img year-2026" id="y2026">
+<img src="year2025.png" alt="" class="year-img year-2025" id="y2025">
+<div class="hand hh"></div><div class="hand hm"></div><div class="hand hs"></div>
+<div class="dot"></div>
+</div>
+<p class="cap">Год назад всё было иначе...</p>
+<a href="timeline.html">Продолжить</a>
 </div>
 <script>
 const photos=['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg','photo6.jpg','photo7.jpg','photo8.jpg','photo9.jpg','photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg','photo15.jpg','photo16.jpg','photo17.jpg'];
-let loaded=0,total=photos.length;
-const preFill=document.getElementById('pre-fill'),prePct=document.getElementById('pre-pct'),preloader=document.getElementById('preloader'),cover=document.getElementById('cover');
-function updateProgress(){loaded++;const pct=Math.floor((loaded/total)*100);preFill.style.width=pct+'%';prePct.textContent=pct+'%';if(loaded>=total){setTimeout(()=>{preloader.classList.add('done');cover.classList.add('show');startParticles();},600);}}
-photos.forEach(src=>{const img=new Image();img.onload=updateProgress;img.onerror=updateProgress;img.src=src;});
-if(total===0){preloader.classList.add('done');cover.classList.add('show');startParticles();}
 function startParticles(){
 const container=document.getElementById('particles');
 for(let i=0;i<60;i++){
@@ -106,6 +107,14 @@ for(let i=0;i<60;i++){
   if(isPhoto){const img=document.createElement('img');img.src=photos[Math.floor(Math.random()*photos.length)];p.appendChild(img);}
   container.appendChild(p);
 }}
+function startClock(){
+  setTimeout(()=>{
+    document.getElementById('y2026').classList.add('out');
+    document.getElementById('y2025').classList.add('in');
+  },2500);
+}
+startParticles();
+startClock();
 </script>
 </body>
 </html>
