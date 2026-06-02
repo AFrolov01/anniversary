@@ -32,9 +32,12 @@ html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:
 .opt:hover{border-color:#d4a5a5;box-shadow:0 0 20px rgba(212,165,165,.1);transform:translateX(5px)}
 
 /* Кнопка play в варианте */
-.play-btn{width:32px;height:32px;border:1px solid rgba(212,165,165,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:.2s;color:#d4a5a5;font-size:.7rem;background:transparent}
+.play-btn{width:32px;height:32px;border:1px solid rgba(212,165,165,.4);border-radius:50%;display:flex;align-items:center;justify-content:center;flex-shrink:0;cursor:pointer;transition:.2s;color:#d4a5a5;font-size:.7rem;background:transparent;position:relative}
 .play-btn:hover{border-color:#d4a5a5;background:rgba(212,165,165,.1)}
 .play-btn.playing{border-color:#27ae60;color:#27ae60;background:rgba(39,174,96,.1)}
+.play-btn.error{border-color:rgba(220,60,60,.8);color:rgba(220,60,60,.9);background:rgba(220,60,60,.15)}
+.play-btn.loading{animation:pulseLoad 1s ease infinite}
+@keyframes pulseLoad{0%,100%{opacity:1}50%{opacity:.4}}
 
 .opt-letter{display:inline-flex;align-items:center;justify-content:center;width:30px;height:30px;border:1px solid rgba(212,165,165,.35);border-radius:50%;color:#d4a5a5;font-size:.8rem;font-weight:bold;flex-shrink:0;transition:.3s}
 .opt:hover .opt-letter{border-color:#d4a5a5}
@@ -119,7 +122,7 @@ const questions = [
     options:[
       {letter:'а',text:'',audio:'music1.mp3',correct:false},
       {letter:'б',text:'',audio:'music2.m4a',correct:false},
-      {letter:'в',text:'',audio:'music3.mp3',correct:true},
+      {letter:'в',text:'',audio:'music%203.mp3',correct:true},
       {letter:'г',text:'',audio:'music4.mp3',correct:false}
     ]
   }
@@ -159,7 +162,7 @@ function toggleAudio(e, btn) {
   // Остановить текущее
   if(currentAudio && currentAudio.src.includes(src)) {
     if(currentAudio.paused) {
-      currentAudio.play();
+      currentAudio.play().catch(()=>{});
       btn.innerHTML = '&#10074;&#10074;';
       btn.classList.add('playing');
     } else {
@@ -177,18 +180,38 @@ function toggleAudio(e, btn) {
   }
   if(currentPlayBtn) {
     currentPlayBtn.innerHTML = '&#9654;';
-    currentPlayBtn.classList.remove('playing');
+    currentPlayBtn.classList.remove('playing','loading','error');
   }
 
   // Запустить новое
   currentAudio = new Audio(src);
   currentAudio.loop = true;
-  currentAudio.play();
-  currentPlayBtn = btn;
-  btn.innerHTML = '&#10074;&#10074;';
-  btn.classList.add('playing');
 
-  // При окончании сбросить
+  // Визуальный статус — загрузка
+  btn.innerHTML = '...';
+  btn.classList.add('loading');
+  btn.classList.remove('error');
+
+  currentAudio.oncanplay = function() {
+    btn.classList.remove('loading');
+    btn.classList.add('playing');
+    btn.innerHTML = '&#10074;&#10074;';
+  };
+
+  currentAudio.onerror = function() {
+    btn.classList.remove('loading','playing');
+    btn.classList.add('error');
+    btn.innerHTML = '!';
+  };
+
+  currentAudio.play().catch(()=>{
+    btn.classList.remove('loading','playing');
+    btn.classList.add('error');
+    btn.innerHTML = '!';
+  });
+
+  currentPlayBtn = btn;
+
   currentAudio.onended = function() {
     btn.innerHTML = '&#9654;';
     btn.classList.remove('playing');
