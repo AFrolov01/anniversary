@@ -8,88 +8,78 @@
 *{margin:0;padding:0;box-sizing:border-box}
 html,body{font-family:system-ui,sans-serif;background:#0a0a0f;color:#fff;height:100vh;width:100vw;overflow:hidden;position:relative}
 
-/* Блур и видео */
 .blur-spot{position:fixed;bottom:-180px;right:-180px;width:700px;height:700px;border-radius:50%;background:rgba(0,0,0,.55);filter:blur(120px);z-index:14;pointer-events:none}
 .lilac-video{position:fixed;bottom:-40px;right:-40px;width:50vw;max-width:520px;z-index:15;pointer-events:none;object-fit:contain;-webkit-mask-image:radial-gradient(ellipse 75% 75% at 65% 65%,black 30%,transparent 80%);mask-image:radial-gradient(ellipse 75% 75% at 65% 65%,black 30%,transparent 80%)}
 @media(max-width:480px){.lilac-video{width:60vw;max-width:380px;bottom:-20px;right:-20px}.blur-spot{width:450px;height:450px;filter:blur(90px);bottom:-120px;right:-120px}}
 
-/* ЧАСЫ — страница 1 */
+/* ==================== ЧАСЫ ==================== */
 #clock{position:fixed;top:0;left:0;width:100%;height:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:5;padding:20px;opacity:0;transition:opacity 1.5s ease}
 #clock.show{opacity:1}
-#clock.fall{transition:transform 1.2s cubic-bezier(.4,0,.2,1),opacity .8s ease;transform:translateY(120vh) rotate(25deg);opacity:0;pointer-events:none}
-.clock-h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:30px;text-align:center;font-weight:400}
+
+.clock-h1{font-family:serif;font-size:clamp(1.5rem,5vw,2.5rem);color:#e8c4c4;margin-bottom:25px;text-align:center;font-weight:400}
 .clock-h1 em{font-style:italic;color:#d4a5a5}
-.wrap{position:relative;width:min(90vw,450px);height:min(90vw,450px);display:flex;align-items:center;justify-content:center}
+
+.wrap{position:relative;width:min(72vw,380px);height:min(72vw,380px);display:flex;align-items:center;justify-content:center}
 .wrap img.clock-face{width:100%;height:100%;object-fit:contain;display:block;filter:drop-shadow(0 0 20px rgba(0,0,0,.5))}
-.year-img{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);z-index:5;width:70px;height:auto;pointer-events:none;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.4,0,.2,1)}
+
+.year-img{position:absolute;top:42%;left:50%;transform:translate(-50%,-50%);z-index:5;width:65px;height:auto;pointer-events:none;transition:opacity 1.2s ease,transform 1.2s cubic-bezier(.4,0,.2,1)}
 .year-2026{opacity:1}
 .year-2025{opacity:0;transform:translate(-50%,-50%) translateX(-20px)}
 .year-2026.out{opacity:0;transform:translate(-50%,-50%) translateX(20px)}
 .year-2025.in{opacity:1;transform:translate(-50%,-50%) translateX(0)}
+
 .hand{position:absolute;bottom:50%;left:50%;transform-origin:bottom center;border-radius:4px;z-index:6;box-shadow:2px 2px 5px rgba(0,0,0,.3);pointer-events:none}
 .hh{width:5px;height:26%;background:#1a1510;margin-left:-2.5px;transform:rotate(232deg);border-radius:3px 3px 0 0;animation:sh 5.5s cubic-bezier(.4,0,.2,1) forwards}
 .hm{width:3px;height:35%;background:#1a1510;margin-left:-1.5px;transform:rotate(278deg);border-radius:2px 2px 0 0;animation:sm 4s cubic-bezier(.4,0,.2,1) forwards}
 .hs{width:1.5px;height:38%;background:#3a2010;margin-left:-.75px;transform:rotate(195deg);opacity:.85;animation:ss 2.5s cubic-bezier(.4,0,.2,1) forwards}
 .dot{position:absolute;width:12px;height:12px;background:#1a1510;border-radius:50%;top:50%;left:50%;transform:translate(-50%,-50%);z-index:7;box-shadow:0 2px 5px rgba(0,0,0,.35)}
+
 @keyframes sh{0%{transform:rotate(232deg)}100%{transform:rotate(-128deg)}}
 @keyframes sm{0%{transform:rotate(278deg)}100%{transform:rotate(-82deg)}}
 @keyframes ss{0%{transform:rotate(195deg);opacity:.85}20%{opacity:1}100%{transform:rotate(-165deg);opacity:.7}}
-.cap{margin-top:40px;color:rgba(212,165,165,.6);font-family:serif;letter-spacing:2px;text-align:center}
-.continue-btn{display:inline-block;margin-top:25px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;text-decoration:none;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;transition:.3s;background:transparent;cursor:pointer;font-family:system-ui,sans-serif}
+
+.cap{margin-top:35px;color:rgba(212,165,165,.6);font-family:serif;letter-spacing:2px;text-align:center}
+.continue-btn{display:inline-block;margin-top:22px;padding:14px 40px;border:1px solid rgba(212,165,165,.35);color:#e8c4c4;background:transparent;border-radius:50px;font-size:.75rem;letter-spacing:3px;text-transform:uppercase;transition:.3s;cursor:pointer;font-family:system-ui,sans-serif}
 .continue-btn:hover{border-color:#d4a5a5;box-shadow:0 0 30px rgba(212,165,165,.15);transform:translateY(-2px)}
-.continue-btn.fall-btn{transition:transform 1.2s cubic-bezier(.4,0,.2,1),opacity .8s ease}
 
-/* Тряска экрана */
+/* Тряска */
 @keyframes shake{0%,100%{transform:translate(0,0)}10%{transform:translate(-5px,4px)}20%{transform:translate(5px,-4px)}30%{transform:translate(-4px,3px)}40%{transform:translate(4px,-3px)}50%{transform:translate(-3px,2px)}60%{transform:translate(3px,-2px)}70%{transform:translate(-2px,1px)}80%{transform:translate(2px,-1px)}90%{transform:translate(0,0)}}
-body.shaking{animation:shake .5s ease}
+body.shaking{animation:shake .45s ease}
 
-/* КОЛЕСО ФОРТУНЫ — контейнер */
-.wheel-scene{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:20;opacity:0;transition:opacity .3s ease}
+/* ==================== КОЛЕСО СЦЕНА ==================== */
+.wheel-scene{position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:20;opacity:0;transition:opacity .2s ease}
 .wheel-scene.active{pointer-events:auto}
 .wheel-scene.show{opacity:1}
 
-/* Верёвки — идут от верха экрана до колеса */
-.rope{position:absolute;top:-75vh;width:18px;height:75vh;object-fit:cover;opacity:.9;z-index:19}
-.rope-left{left:calc(50% - min(36vw,180px) - 9px)}
-.rope-right{left:calc(50% + min(36vw,180px) - 9px)}
+/* Верёвки — ЗА колесом, входят в него */
+.rope{position:absolute;top:0;width:14px;z-index:19;opacity:.85;pointer-events:none;transform-origin:top center}
+.rope img{width:100%;height:100%;object-fit:cover;display:block}
 
-/* SVG колеса */
-.wheel-wrap{position:absolute;top:50%;left:50%;width:min(80vw,400px);height:min(80vw,400px);transform:translate(-50%,-50%) translateY(-130vh);z-index:21}
+/* Колесо — ПОВЕРХ верёвок */
+.wheel-wrap{position:absolute;left:50%;top:50%;width:min(68vw,360px);height:min(68vw,360px);transform:translate(-50%,-50%) translateY(-120vh);z-index:21;transition:none}
 .wheel-svg{width:100%;height:100%;filter:drop-shadow(0 8px 30px rgba(0,0,0,.7))}
 #wheelGroup{transform-origin:center}
-.pin{fill:#555;transition:fill .08s,filter .08s}
+.pin{fill:#777;transition:fill .06s,filter .06s}
 .pin.lit{fill:#fff;filter:drop-shadow(0 0 10px #fff)}
 
-/* Анимация падения колеса */
-.wheel-wrap.drop{animation:wheelDrop 2.2s cubic-bezier(.25,.46,.45,.94) forwards}
-@keyframes wheelDrop{
-  0%{transform:translate(-50%,-50%) translateY(-130vh)}
-  55%{transform:translate(-50%,-50%) translateY(0)}
-  65%{transform:translate(-50%,-50%) translateY(-14px)}
-  75%{transform:translate(-50%,-50%) translateY(6px)}
-  85%{transform:translate(-50%,-50%) translateY(-3px)}
-  100%{transform:translate(-50%,-50%) translateY(0)}
-}
-/* Установка на место часов */
-.wheel-wrap.settle{animation:settle 1.2s ease forwards}
-@keyframes settle{0%{transform:translate(-50%,-50%) translateY(0)}100%{transform:translate(-50%,-50%) translateY(0)}}
-/* Покачивание */
-.wheel-wrap.swing{animation:swing 4s ease-in-out infinite}
-@keyframes swing{0%,100%{transform:translate(-50%,-50%) rotate(-1.2deg)}50%{transform:translate(-50%,-50%) rotate(1.2deg)}}
-/* Затемнение после выпадения */
-.wheel-wrap.dimmed .wheel-svg{transition:filter 1s ease;filter:brightness(.25) drop-shadow(0 8px 30px rgba(0,0,0,.7))}
-
-/* Стрелка — смотрит ВНИЗ, над колесом */
-.arrow-box{position:absolute;top:calc(50% - min(40vw,200px) - 42px);left:50%;transform:translateX(-50%);z-index:22;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4));opacity:0;transition:opacity .6s ease}
+/* Стрелка — сверху колеса, не растянутая */
+.arrow-box{position:absolute;left:50%;z-index:22;opacity:0;transition:opacity .6s ease;pointer-events:none}
 .arrow-box.show{opacity:1}
-.arrow-box svg{width:36px;height:42px}
+.arrow-box svg{width:32px;height:36px;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))}
 
-/* Кнопка Крутить — на верёвке */
-.spin-btn-wrap{position:absolute;top:calc(50% + min(40vw,200px) + 30px);left:50%;transform:translateX(-50%) translateY(20px);z-index:22;opacity:0;transition:opacity .8s ease,transform .8s ease;pointer-events:none}
-.spin-btn-wrap.show{opacity:1;transform:translateX(-50%) translateY(0);pointer-events:auto}
-.spin-btn-wrap .rope-btn{position:absolute;top:-50px;left:50%;transform:translateX(-50%);width:3px;height:50px;background:linear-gradient(to bottom,#c4a882,#8b7355);border-radius:2px;opacity:0;transition:opacity .5s ease}
-.spin-btn-wrap.show .rope-btn{opacity:1}
-.spin-btn{display:inline-block;padding:14px 45px;border:2px solid #d4a5a5;color:#e8c4c4;background:rgba(10,10,15,.9);border-radius:50px;font-size:.85rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:.3s;font-family:serif}
+/* Затемнение после выпадения */
+.wheel-wrap.dimmed .wheel-svg{transition:filter 1s ease;filter:brightness(.22) drop-shadow(0 8px 30px rgba(0,0,0,.7))}
+
+/* Покачивание */
+.wheel-wrap.swing{animation:swing 3.5s ease-in-out infinite}
+@keyframes swing{0%,100%{transform:translate(-50%,-50%) rotate(-1.5deg)}50%{transform:translate(-50%,-50%) rotate(1.5deg)}}
+
+/* Кнопка — ВПЛОТНУЮ к колесу, верёвка из низа колеса */
+.spin-btn-wrap{position:absolute;left:50%;z-index:22;opacity:0;transition:opacity .8s ease;pointer-events:none;text-align:center;transform:translateX(-50%)}
+.spin-btn-wrap.show{opacity:1;pointer-events:auto}
+.spin-rope{width:10px;height:0;margin:0 auto;background:url('rope.png') center top / cover no-repeat;transition:height .5s ease;border-radius:1px;position:relative;z-index:19}
+.spin-btn-wrap.show .spin-rope{height:42px}
+.spin-btn{display:inline-block;margin-top:0;padding:11px 36px;border:2px solid #d4a5a5;color:#e8c4c4;background:rgba(10,10,15,.9);border-radius:50px;font-size:.8rem;letter-spacing:3px;text-transform:uppercase;cursor:pointer;transition:.3s;font-family:serif;position:relative;z-index:22}
 .spin-btn:hover{border-color:#e8c4c4;box-shadow:0 0 25px rgba(212,165,165,.2);transform:translateY(-2px)}
 .spin-btn:disabled{opacity:.5;cursor:not-allowed}
 
@@ -112,12 +102,11 @@ body.shaking{animation:shake .5s ease}
 @keyframes fall-rotate{to{transform:translateY(110vh) rotate(360deg)}}
 
 @media(max-width:480px){
-  .wrap{width:min(95vw,380px);height:min(95vw,380px)}
-  .clock-h1{margin-bottom:20px;font-size:1.4rem}
-  .year-img{width:60px;top:40%}
-  .rope{width:14px}
-  .rope-left{left:calc(50% - min(38vw,160px) - 7px)}
-  .rope-right{left:calc(50% + min(38vw,160px) - 7px)}
+  .wrap{width:min(78vw,340px);height:min(78vw,340px)}
+  .wheel-wrap{width:min(72vw,320px);height:min(72vw,320px)}
+  .clock-h1{font-size:1.35rem;margin-bottom:18px}
+  .year-img{width:55px}
+  .rope{width:11px}
 }
 </style>
 </head>
@@ -126,10 +115,10 @@ body.shaking{animation:shake .5s ease}
 <div class="blur-spot"></div>
 <video class="lilac-video" autoplay loop muted playsinline><source src="lilac.mp4" type="video/mp4"></video>
 
-<!-- ==================== СТРАНИЦА ЧАСЫ ==================== -->
+<!-- ==================== ЧАСЫ ==================== -->
 <div id="clock" class="show">
   <h1 class="clock-h1">Вспомним, <em>как всё начиналось</em></h1>
-  <div class="wrap">
+  <div class="wrap" id="clockWrap">
     <img src="clock.png" alt="" class="clock-face">
     <img src="year2026.png" alt="" class="year-img year-2026" id="y2026">
     <img src="year2025.png" alt="" class="year-img year-2025" id="y2025">
@@ -142,29 +131,29 @@ body.shaking{animation:shake .5s ease}
   <button class="continue-btn" id="continueBtn" onclick="startWheelScene()">Продолжить</button>
 </div>
 
-<!-- ==================== КОЛЕСО ФОРТУНЫ ==================== -->
+<!-- ==================== КОЛЕСО СЦЕНА ==================== -->
 <div class="wheel-scene" id="wheelScene">
-  <!-- Верёвки -->
-  <img src="rope.png" class="rope rope-left" id="ropeLeft" alt="">
-  <img src="rope.png" class="rope rope-right" id="ropeRight" alt="">
+  <!-- Верёвки — ЗА колесом (z-index 19 vs 21) -->
+  <div class="rope" id="ropeLeft"><img src="rope.png" alt=""></div>
+  <div class="rope" id="ropeRight"><img src="rope.png" alt=""></div>
 
-  <!-- Колесо -->
-  <div class="wheel-wrap wheel-dim" id="wheelWrap">
+  <!-- Стрелка — сверху, указывает ВНИЗ (z-index 22) -->
+  <div class="arrow-box" id="arrowBox">
+    <img src="arrow-down.png" alt="" style="width:32px;height:36px;display:block;filter:drop-shadow(0 2px 6px rgba(0,0,0,.4))">
+  </div>
+
+  <!-- Колесо — ПОВЕРХ верёвок (z-index 21) -->
+  <div class="wheel-wrap" id="wheelWrap">
     <svg class="wheel-svg" viewBox="0 0 500 500" id="wheelSvg">
       <g id="wheelGroup"></g>
-      <circle cx="250" cy="250" r="42" fill="#1a1510" stroke="#d4a5a5" stroke-width="2"/>
-      <circle cx="250" cy="250" r="18" fill="#0a0a0f"/>
+      <circle cx="250" cy="250" r="46" fill="#1a1510" stroke="#d4a5a5" stroke-width="2"/>
+      <circle cx="250" cy="250" r="20" fill="#0a0a0f"/>
     </svg>
   </div>
 
-  <!-- Стрелка -->
-  <div class="arrow-box" id="arrowBox">
-    <svg viewBox="0 0 36 42"><polygon points="18,42 0,0 18,14 36,0" fill="#d4a5a5"/></svg>
-  </div>
-
-  <!-- Кнопка Крутить на верёвке -->
+  <!-- Кнопка — ВПЛОТНУЮ к колесу, верёвка из rope.png (z-index 22) -->
   <div class="spin-btn-wrap" id="spinBtnWrap">
-    <div class="rope-btn"></div>
+    <div class="spin-rope" id="spinRope"></div>
     <button class="spin-btn" id="spinBtn" onclick="startSpin()">Крутить</button>
   </div>
 </div>
@@ -178,7 +167,23 @@ body.shaking{animation:shake .5s ease}
 
 <script>
 // ==========================================
-// СЕКТОРА КОЛЕСА — рандом при каждом заходе
+// ГЛОБАЛЬНЫЕ
+// ==========================================
+let WHEEL_SIZE, WHEEL_RADIUS, CLOCK_SIZE, CLOCK_RADIUS;
+let CENTER_Y;
+
+function calcDimensions() {
+  const wheelWrap = document.getElementById('wheelWrap');
+  const clockWrap = document.getElementById('clockWrap');
+  WHEEL_SIZE = wheelWrap.offsetHeight;
+  WHEEL_RADIUS = WHEEL_SIZE / 2;
+  CLOCK_SIZE = clockWrap.offsetHeight;
+  CLOCK_RADIUS = CLOCK_SIZE / 2;
+  CENTER_Y = window.innerHeight / 2;
+}
+
+// ==========================================
+// РАНДОМНЫЕ СЕКТОРА
 // ==========================================
 const sectorsBase = [
   {text:'Тест',emoji:'✅',color:'#c0392b'},
@@ -187,7 +192,6 @@ const sectorsBase = [
   {text:'Купон',emoji:'🤫',color:'#8e44ad'},
   {text:'Стата вся',emoji:'💫',color:'#2980b9'}
 ];
-// Полностью рандомный порядок при каждом заходе
 const sectors = [...sectorsBase].sort(() => Math.random() - .5);
 const segAngle = 360 / sectors.length;
 
@@ -202,9 +206,11 @@ const resultText = document.getElementById('resultText');
 const resultEmoji = document.getElementById('resultEmoji');
 const clockEl = document.getElementById('clock');
 const continueBtn = document.getElementById('continueBtn');
+const ropeLeft = document.getElementById('ropeLeft');
+const ropeRight = document.getElementById('ropeRight');
 
 // ==========================================
-// РИСУЕМ КОЛЕСО с колышками
+// РИСУЕМ КОЛЕСО
 // ==========================================
 const radius = 200;
 const pinRadius = radius + 14;
@@ -216,7 +222,6 @@ sectors.forEach((s, i) => {
   const x1 = 250 + Math.cos(startA) * radius, y1 = 250 + Math.sin(startA) * radius;
   const x2 = 250 + Math.cos(endA) * radius, y2 = 250 + Math.sin(endA) * radius;
 
-  // Сектор
   const path = document.createElementNS('http://www.w3.org/2000/svg','path');
   path.setAttribute('d', `M 250 250 L ${x1} ${y1} A ${radius} ${radius} 0 0 1 ${x2} ${y2} Z`);
   path.setAttribute('fill', s.color);
@@ -224,25 +229,24 @@ sectors.forEach((s, i) => {
   path.setAttribute('stroke-width', '3');
   wheelGroup.appendChild(path);
 
-  // Текст сектора
   const midA = (i * segAngle + segAngle / 2 - 90) * Math.PI / 180;
   const tx = 250 + Math.cos(midA) * (radius * .55);
   const ty = 250 + Math.sin(midA) * (radius * .55);
+  let rot = i * segAngle + segAngle / 2;
+  if (rot > 90 && rot < 270) rot += 180;
   const text = document.createElementNS('http://www.w3.org/2000/svg','text');
   text.setAttribute('x', tx);
   text.setAttribute('y', ty);
   text.setAttribute('text-anchor', 'middle');
   text.setAttribute('dominant-baseline', 'middle');
   text.setAttribute('fill', '#fff');
-  text.setAttribute('font-size', '15');
+  text.setAttribute('font-size', '14');
   text.setAttribute('font-family', 'serif');
   text.setAttribute('font-weight', 'bold');
-  // Поворачиваем текст радиально
-  text.setAttribute('transform', `rotate(${i * segAngle + segAngle / 2}, ${tx}, ${ty})`);
+  text.setAttribute('transform', `rotate(${rot}, ${tx}, ${ty})`);
   text.textContent = s.text;
   wheelGroup.appendChild(text);
 
-  // Колышки по краям каждого сектора
   for (let j = 0; j <= 1; j++) {
     const a = ((i + j) * segAngle - 90) * Math.PI / 180;
     const px = 250 + Math.cos(a) * pinRadius;
@@ -258,83 +262,71 @@ sectors.forEach((s, i) => {
 });
 
 // ==========================================
-// ФИЗИКА КОЛЕСА с колышками
+// ПОЗИЦИОНИРОВАНИЕ
 // ==========================================
-let angle = 0, velocity = 0, isSpinning = false;
-const friction = .982;
-const minVel = .08;
-const pinResistance = .965; // Сопротивление при касании колышка
-const pinThreshold = 10; // Градусы для зажигания
+function positionElements() {
+  calcDimensions();
 
-function getPinDiff(pinAngle, wheelAngle) {
-  // Абсолютный угол пина (куда он указывает относительно верха)
-  const absAngle = ((pinAngle + wheelAngle) % 360 + 360) % 360;
-  // Стрелка смотрит ВНИЗ = 270° (или -90°)
-  const arrowAngle = 270;
-  // Кратчайшее расстояние по кругу
-  let diff = Math.abs(absAngle - arrowAngle);
-  if (diff > 180) diff = 360 - diff;
-  return diff;
+  const wheelLeftPx = (window.innerWidth - WHEEL_SIZE) / 2;
+  const wheelRightPx = wheelLeftPx + WHEEL_SIZE;
+  const ropeW = ropeLeft.offsetWidth || 14;
+
+  // Верёвки — ЗА колесом, входят В него, ближе к центру
+  ropeLeft.style.left = (wheelLeftPx - ropeW / 2 + 40) + 'px';
+  ropeRight.style.left = (wheelRightPx - ropeW / 2 - 40) + 'px';
+  ropeLeft.style.height = CENTER_Y + 'px';
+  ropeRight.style.height = CENTER_Y + 'px';
+
+  // Стрелка — сверху, указывает ВНИЗ, низ касается верха колеса
+  const arrowBottom = CENTER_Y - WHEEL_RADIUS + 6; // низ стрелки упирается в верх колеса
+  const arrowHeight = 36;
+  arrowBox.style.top = (arrowBottom - arrowHeight) + 'px';
+  arrowBox.style.transform = 'translateX(-50%)';
+
+  // Кнопка — ВПЛОТНУЮ к низу колеса, чуть выше
+  const btnTop = CENTER_Y + WHEEL_RADIUS - 35; // почти вплотную
+  spinBtnWrap.style.top = btnTop + 'px';
 }
 
+// ==========================================
+// ФИЗИКА КОЛЕСА
+// ==========================================
+let angle = 0, velocity = 0, isSpinning = false;
+const friction = .983;
+const minVel = .08;
+
 function updatePins() {
-  // Обновляем состояние колышков
+  const cur = (angle % 360 + 360) % 360;
   pins.forEach(p => {
-    const diff = getPinDiff(p.angle, angle);
-    if (diff < pinThreshold) {
-      p.el.classList.add('lit');
-    } else {
-      p.el.classList.remove('lit');
-    }
+    const pa = ((p.angle - cur) % 360 + 360) % 360;
+    const dist = Math.min(Math.abs(pa), Math.abs(pa - 360));
+    p.el.classList.toggle('lit', dist < 12);
   });
 }
 
 function applyPinPhysics() {
-  // Физика перекатывания: когда колышек подходит к стрелке — сопротивление
-  let nearestPinDist = 360;
+  const cur = (angle % 360 + 360) % 360;
+  let nearest = 360;
   pins.forEach(p => {
-    const diff = getPinDiff(p.angle, angle);
-    if (diff < nearestPinDist) nearestPinDist = diff;
+    const pa = ((p.angle - cur) % 360 + 360) % 360;
+    const dist = Math.min(Math.abs(pa), Math.abs(pa - 360));
+    if (dist < nearest) nearest = dist;
   });
-
-  // Если колышек очень близко — замедляем (эффект перекатывания)
-  if (nearestPinDist < 6 && velocity > 1.5) {
-    velocity *= pinResistance;
-  }
-  // Умеренное сопротивление при средней близости
-  else if (nearestPinDist < 12 && velocity > 3) {
-    velocity *= .975;
-  }
+  if (nearest < 7 && velocity > 2) velocity *= .94;
+  else if (nearest < 15 && velocity > 4) velocity *= .97;
 }
-
-let lastSoundPin = -1;
 
 function animate() {
   if (!isSpinning) return;
-
   angle += velocity;
   velocity *= friction;
-
-  // Применяем физику колышков
   applyPinPhysics();
-
-  // Звуковой эффект при прохождении колышка (визуальный тик)
-  let currentNearest = -1, minDist = 360;
-  pins.forEach((p, idx) => {
-    const diff = getPinDiff(p.angle, angle);
-    if (diff < minDist) { minDist = diff; currentNearest = idx; }
-  });
-  if (currentNearest !== lastSoundPin && minDist < 8) {
-    lastSoundPin = currentNearest;
-  }
-
   if (velocity < minVel) {
     velocity = 0;
     isSpinning = false;
     finishSpin();
     return;
   }
-
   wheelGroup.style.transform = `rotate(${angle}deg)`;
   updatePins();
   requestAnimationFrame(animate);
@@ -343,86 +335,95 @@ function animate() {
 function startSpin() {
   if (isSpinning) return;
   spinBtn.disabled = true;
-  // Случайная скорость — достаточно быстрая для хорошей физики
-  velocity = 22 + Math.random() * 18;
+  velocity = 24 + Math.random() * 16;
   isSpinning = true;
-  lastSoundPin = -1;
   animate();
 }
 
 function finishSpin() {
-  // Определяем победителя
-  // Стрелка смотрит ВНИЗ (угол 270°)
-  // Угол колеса = angle % 360
-  // Сектор под стрелкой = тот, на который указывает 270°
   const cur = (angle % 360 + 360) % 360;
-  // Нормализуем: какой сектор на угле 270° относительно вращения
-  const arrowAngle = 270;
-  const relativeAngle = ((arrowAngle - cur) % 360 + 360) % 360;
-  const idx = Math.floor(relativeAngle / segAngle) % sectors.length;
+  const idx = Math.floor(((360 - cur) % 360) / segAngle) % sectors.length;
   const winner = sectors[idx];
 
   setTimeout(() => {
     wheelWrap.classList.add('dimmed');
     resultEmoji.textContent = winner.emoji;
     resultText.innerHTML = `Выпало:<br><span style="color:${winner.color}">${winner.text}</span>`;
+    // Если выпал Тест — кнопка ведёт на test.html
+    const nextLink = resultOverlay.querySelector('.result-next-btn');
+    nextLink.href = winner.text === 'Тест' ? 'test.html' : 'timeline.html';
     resultOverlay.classList.add('show');
   }, 600);
 }
 
 // ==========================================
-// СЦЕНАРИЙ: Колесо падает на часы
+// СЦЕНАРИЙ ПАДЕНИЯ
 // ==========================================
 let sceneStarted = false;
+
+function setWheelY(y, duration, easing) {
+  const t = duration ? `transform ${duration} ${easing || 'ease'}` : 'none';
+  wheelWrap.style.transition = t;
+  wheelWrap.style.transform = `translate(-50%, -50%) translateY(${y}px)`;
+  ropeLeft.style.transition = t;
+  ropeRight.style.transition = t;
+  ropeLeft.style.transform = `translateY(${y}px)`;
+  ropeRight.style.transform = `translateY(${y}px)`;
+}
 
 function startWheelScene() {
   if (sceneStarted) return;
   sceneStarted = true;
-
   continueBtn.disabled = true;
 
-  // 1. Показываем сцену колеса
-  wheelScene.classList.add('active');
-  wheelScene.classList.add('show');
+  positionElements();
+  wheelScene.classList.add('active', 'show');
 
-  // 2. Колесо начинает падать
-  setTimeout(() => {
-    wheelWrap.classList.add('drop');
-  }, 100);
+  const startY = -window.innerHeight - WHEEL_SIZE;
+  setWheelY(startY, null);
 
-  // 3. УДАР — тряска + часы подкашиваются
+  // ФАЗА 1: Падение до касания
+  const touchY = -(WHEEL_RADIUS + CLOCK_RADIUS);
+
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      setWheelY(touchY, '0.85s', 'cubic-bezier(.55,.1,.3,1)');
+    });
+  });
+
+  // ФАЗА 2: УДАР
   setTimeout(() => {
     document.body.classList.add('shaking');
-    clockEl.style.transition = 'transform .5s cubic-bezier(.4,0,.2,1)';
-    clockEl.style.transform = 'translateY(15px) rotate(6deg)';
-    setTimeout(() => { document.body.classList.remove('shaking'); }, 500);
-  }, 1200);
+    clockEl.style.transition = 'transform .35s cubic-bezier(.4,0,.2,1)';
+    clockEl.style.transform = 'translateY(10px) rotate(6deg)';
+    setTimeout(() => document.body.classList.remove('shaking'), 450);
+  }, 900);
 
-  // 4. Часы падают окончательно вместе с кнопкой
+  // ФАЗА 3: Часы падают
   setTimeout(() => {
-    clockEl.classList.add('fall');
-    continueBtn.classList.add('fall-btn');
-    continueBtn.style.transform = 'translateY(120vh)';
+    clockEl.style.transition = 'transform 1s ease, opacity .7s ease';
+    clockEl.style.transform = 'translateY(130vh) rotate(28deg)';
+    clockEl.style.opacity = '0';
+    continueBtn.style.transition = 'transform 1s ease, opacity .5s ease';
+    continueBtn.style.transform = 'translateY(80vh)';
     continueBtn.style.opacity = '0';
-  }, 1800);
+  }, 1400);
 
-  // 5. Колесо устанавливается на место
+  // ФАЗА 4: Колесо допадает до центра
   setTimeout(() => {
-    wheelWrap.classList.remove('drop');
-    wheelWrap.classList.add('settle');
-  }, 2000);
+    setWheelY(0, '1.4s', 'ease');
+  }, 1650);
 
-  // 6. Колесо покачивается + появляется стрелка + кнопка
+  // ФАЗА 5: Качание + стрелка + кнопка
   setTimeout(() => {
-    wheelWrap.classList.remove('settle');
     wheelWrap.classList.add('swing');
     arrowBox.classList.add('show');
     spinBtnWrap.classList.add('show');
-  }, 3300);
+  }, 3100);
 }
 
 // ==========================================
-// ЧАСЫ — смена года
+// ЧАСЫ + ЧАСТИЦЫ
 // ==========================================
 function startClock() {
   setTimeout(() => {
@@ -431,12 +432,7 @@ function startClock() {
   }, 2500);
 }
 
-// ==========================================
-// ЧАСТИЦЫ
-// ==========================================
 const photos = ['photo1.jpg','photo2.jpg','photo3.jpg','photo4.jpg','photo5.jpg','photo6.jpg','photo7.jpg','photo8.jpg','photo9.jpg','photo10.jpg','photo11.jpg','photo12.jpg','photo13.jpg','photo14.jpg','photo15.jpg','photo16.jpg','photo17.jpg'];
-
-// Предзагрузка фото
 photos.forEach(src => { const img = new Image(); img.src = src; });
 
 function startParticles() {
@@ -462,6 +458,7 @@ function startParticles() {
 
 startParticles();
 startClock();
+window.addEventListener('resize', positionElements);
 </script>
 </body>
 </html>
