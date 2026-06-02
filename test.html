@@ -183,32 +183,38 @@ function toggleAudio(e, btn) {
     currentPlayBtn.classList.remove('playing','loading','error');
   }
 
-  // Запустить новое
-  currentAudio = new Audio(src);
+  // Запустить новое — с crossOrigin для GitHub Pages
+  currentAudio = new Audio();
+  currentAudio.crossOrigin = 'anonymous';
+  currentAudio.src = src;
   currentAudio.loop = true;
+  currentAudio.preload = 'auto';
 
   // Визуальный статус — загрузка
   btn.innerHTML = '...';
   btn.classList.add('loading');
-  btn.classList.remove('error');
+  btn.classList.remove('error','playing');
 
-  currentAudio.oncanplay = function() {
+  // Запускаем сразу (из пользовательского клика — разрешено)
+  currentAudio.play().then(() => {
     btn.classList.remove('loading');
     btn.classList.add('playing');
     btn.innerHTML = '&#10074;&#10074;';
-  };
+  }).catch(() => {
+    // Если сразу не получилось — ждём загрузки
+    currentAudio.oncanplaythrough = function() {
+      btn.classList.remove('loading');
+      btn.classList.add('playing');
+      btn.innerHTML = '&#10074;&#10074;';
+      currentAudio.play().catch(()=>{});
+    };
+  });
 
   currentAudio.onerror = function() {
     btn.classList.remove('loading','playing');
     btn.classList.add('error');
     btn.innerHTML = '!';
   };
-
-  currentAudio.play().catch(()=>{
-    btn.classList.remove('loading','playing');
-    btn.classList.add('error');
-    btn.innerHTML = '!';
-  });
 
   currentPlayBtn = btn;
 
