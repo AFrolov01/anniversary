@@ -119,7 +119,7 @@ const questions = [
     options:[
       {letter:'а',text:'',audio:'music1.mp3',correct:false},
       {letter:'б',text:'',audio:'music2.m4a',correct:false},
-      {letter:'в',text:'',audio:'music3.mp3',correct:true},
+      {letter:'в',text:'',audio:'music%203.mp3',correct:true},
       {letter:'г',text:'',audio:'music4.mp3',correct:false}
     ]
   }
@@ -149,4 +149,104 @@ function renderQuestion() {
     html += '</div>';
   });
   html += '</div>';
-  quizEl.innerHTM
+  quizEl.innerHTML = html;
+}
+
+function toggleAudio(e, btn) {
+  e.stopPropagation();
+  const src = btn.dataset.audio;
+
+  // Остановить текущее
+  if(currentAudio && currentAudio.src.includes(src)) {
+    if(currentAudio.paused) {
+      currentAudio.play();
+      btn.innerHTML = '&#10074;&#10074;';
+      btn.classList.add('playing');
+    } else {
+      currentAudio.pause();
+      btn.innerHTML = '&#9654;';
+      btn.classList.remove('playing');
+    }
+    return;
+  }
+
+  // Остановить предыдущее
+  if(currentAudio) {
+    currentAudio.pause();
+    currentAudio.currentTime = 0;
+  }
+  if(currentPlayBtn) {
+    currentPlayBtn.innerHTML = '&#9654;';
+    currentPlayBtn.classList.remove('playing');
+  }
+
+  // Запустить новое
+  currentAudio = new Audio(src);
+  currentAudio.loop = true;
+  currentAudio.play();
+  currentPlayBtn = btn;
+  btn.innerHTML = '&#10074;&#10074;';
+  btn.classList.add('playing');
+
+  // При окончании сбросить
+  currentAudio.onended = function() {
+    btn.innerHTML = '&#9654;';
+    btn.classList.remove('playing');
+  };
+}
+
+function startQuiz() {
+  document.getElementById('startBtn').classList.add('vanish');
+  currentQ = 0;
+  renderQuestion();
+  setTimeout(() => quizEl.classList.add('show'), 500);
+}
+
+function checkAnswer(el, idx) {
+  const q = questions[currentQ];
+  const opt = q.options[idx];
+
+  quizEl.querySelectorAll('.opt').forEach(o => {
+    if(o !== el) o.classList.remove('wrong');
+  });
+
+  if(opt.correct) {
+    el.classList.add('correct');
+    // Остановить музыку при переходе
+    if(currentAudio) { currentAudio.pause(); currentAudio = null; }
+    if(currentPlayBtn) { currentPlayBtn = null; }
+
+    setTimeout(() => {
+      if(currentQ < questions.length - 1) {
+        quizEl.classList.remove('show');
+        setTimeout(() => {
+          currentQ++;
+          renderQuestion();
+          quizEl.classList.add('show');
+        }, 500);
+      } else {
+        quizEl.classList.remove('show');
+        setTimeout(() => congratsEl.classList.add('show'), 500);
+      }
+    }, 800);
+  } else {
+    el.classList.add('wrong');
+  }
+}
+
+// Частицы
+const container = document.getElementById('particles');
+for(let i=0;i<50;i++){
+  const p = document.createElement('div');
+  p.className = 'particle';
+  p.style.left = Math.random()*100+'%';
+  p.style.width = (Math.random()*2+1)+'px';
+  p.style.height = (Math.random()*12+4)+'px';
+  p.style.opacity = Math.random()*.3+.05;
+  p.style.animationDuration = (Math.random()*8+4)+'s';
+  p.style.animationDelay = (Math.random()*10)+'s';
+  container.appendChild(p);
+}
+</script>
+</body>
+</html>
